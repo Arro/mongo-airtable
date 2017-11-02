@@ -40,13 +40,18 @@ look like the following.
           mongo_database: <a mongo db name (e.g. 'main')>
           mongo_collection: <a mongo db collection name (e.g. 'songs')>
 
-Run `yarn install` (or `npm install`) and then
+Run `yarn install` (or `npm install`).  Now you're ready to go.
 
-    gulp init
+When you want to pull from airtable down to your mongodb collection, run: 
 
-This will load your records into the appropriate mongodb collections.
+    gulp pull
 
-This is currently a work in progress.
--------------------------------------
+Later, once you made changes to your mongodb collection, run:
 
+    gulp push
+
+Ideally, you should run `gulp pull` before you're going to go offline, and
+run `gulp push` when you're back online.  
+
+**If you make conflicting changes, one will overwrite the other.** 
 

@@ -35,14 +35,16 @@ gulp.task(`initial-insert`, () => {
 
     return Promise.all([db, data]).then(([db, data]) => {
       const collection = db.collection(table_to_sync.mongo_collection)
-      return collection.insert(data).then(() => {
-        return db.close()
+      return collection.remove({}).then(() => {
+        return collection.insert(data).then(() => {
+          return db.close()
+        })
       })
     })
   }))
 })
 
-gulp.task(`look-for-changed`, () => {
+gulp.task(`look-for-changes`, () => {
   return Promise.all(config.sync.map((table_to_sync) => {
     const db =  mongo_client.connect(
       `mongodb://localhost:27017/${table_to_sync.mongo_database}`,
@@ -84,7 +86,8 @@ gulp.task(`look-for-changed`, () => {
         .pipe(vss(`${table_to_sync.airtable_table}_changed.json`))
         .pipe(gulp.dest(build))
     })
-
-  }))
+  })).then(() => {
+    return Promise.delay(1000)
+  })
 })
 
