@@ -40,6 +40,12 @@ look like the following.
           mongo_database: <a mongo db name (e.g. 'main')>
           mongo_collection: <a mongo db collection name (e.g. 'songs')>
 
+Run `yarn install` (or `npm install`) and then
+
+    gulp init
+
+This will load your records into the appropriate mongodb collections.
+
 This is currently a work in progress.
 -------------------------------------
 
