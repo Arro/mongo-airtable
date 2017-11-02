@@ -53,5 +53,6 @@ Later, once you made changes to your mongodb collection, run:
 Ideally, you should run `gulp pull` before you're going to go offline, and
 run `gulp push` when you're back online.  
 
-**If you make conflicting changes, one will overwrite the other.** 
+**If you make conflicting changes, one will overwrite the other.  Use this
+tool at your own risk!** 
 
