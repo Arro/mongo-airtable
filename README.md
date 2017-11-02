@@ -5,8 +5,8 @@ Motivation
 ----------
 Airtable is great database/spreadsheet hybrid for holding your data.  The
 problem is that sometimes you don't have internet access, so pulling and
-saving data using their API isn't be feasible.  This tool allows you to
-access and save your data to a MongoDB database whether or not you have
+saving data using their API isn't feasible.  This tool allows you to
+get and set your data to a MongoDB database, whether or not you have
 internet access, and then sync whenever is convenient.  That way, Airtable
 is still your source of truth.
 
@@ -15,11 +15,15 @@ Getting started
 Install MongoDB using `brew install mongodb` or similar. 
 
 Let's say you wanted your mongodb database to be called `main` and your
-collection (which maps to a table in Ai
-and your  Run `mongo` and type:
+collection (which maps to a table in Airtable) to be called `songs`.
+
+Run `mongo` and type:
 
     use main
 
+Then type:
+
+    db.createCollection('songs')
 
 Clone this repo, and then create a file called `config.yaml`.  Make it
 look like the following.
