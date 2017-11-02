@@ -8,7 +8,8 @@ problem is that sometimes you don't have internet access, so pulling and
 saving data using their API isn't feasible.  This tool allows you to
 get and set your data to a MongoDB database, whether or not you have
 internet access, and then sync whenever is convenient.  That way, Airtable
-is still your source of truth.
+is still your ultimate source of truth, but your app's proxy source of
+truth is MongoDB.
 
 Getting started
 ----------
