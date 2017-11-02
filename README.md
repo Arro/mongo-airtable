@@ -31,7 +31,7 @@ look like the following.
 
     config:
       auth:
-        airtable: <your airtable api key (starts with 'keyn')
+        airtable: <your airtable api key (starts with 'keyn')>
       sync:
         - airtable_base: <your airtable base key (starts with 'app')>
           airtable_table: <your airtable table name (e.g. 'Songs')>
