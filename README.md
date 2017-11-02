@@ -15,8 +15,9 @@ Getting started
 ----------
 Install MongoDB using `brew install mongodb` or similar. 
 
-Let's say you wanted your mongodb database to be called `main` and your
-collection (which maps to a table in Airtable) to be called `songs`.
+Let's say you wanted your mongodb database to be called "main" and your
+collection (which maps to a table in Airtable) to be called "songs".  The
+Airtable view is called "Main View".
 
 Run `mongo` and type:
 
@@ -35,6 +36,7 @@ look like the following.
       sync:
         - airtable_base: <your airtable base key (starts with 'app')>
           airtable_table: <your airtable table name (e.g. 'Songs')>
+          airtable_view: <your airtable view name (e.g. 'Main View')>
           mongo_database: <a mongo db name (e.g. 'main')>
           mongo_collection: <a mongo db collection name (e.g. 'songs')>
 

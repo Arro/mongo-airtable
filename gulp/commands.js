@@ -7,7 +7,6 @@ import del from 'del'
 
 const src = path.resolve(`${__dirname}/../src/**/*.js`)
 const build = path.resolve(`${__dirname}/../build/`)
-console.log(build)
 
 gulp.task(`clean`, () => {
   return del([build])

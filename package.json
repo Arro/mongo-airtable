@@ -26,6 +26,7 @@
     "gulp-eslint": "^3.0.1",
     "gulp-koa-service": "0.0.8",
     "gulp-sourcemaps": "^1.6.0",
+    "mongodb": "^2.2.33",
     "nconf": "^0.8.4",
     "nconf-yaml": "^1.0.2",
     "request-promise": "^3.0.0",
