@@ -51,3 +51,20 @@ gulp.task(`push-changed`, () => {
     })
   }))
 })
+
+gulp.task(`create-new`, () => {
+  return Promise.all(config.sync.map((table_to_sync) => {
+    const base = airtable.base(table_to_sync.airtable_base)
+    return fs.readFileAsync(`${build}/${table_to_sync.airtable_table}_new.json`).then((data) => {
+      return JSON.parse(data)
+    }).then((data) => {
+      return Promise.reduce(data, ((total, record) => {
+        return base(table_to_sync.airtable_table).create(record.fields)
+      }), 0)
+    }).then(() => {
+      return sts(JSON.stringify([], null, 4))
+        .pipe(vss(`${table_to_sync.airtable_table}_new.json`))
+        .pipe(gulp.dest(build))
+    })
+  }))
+})

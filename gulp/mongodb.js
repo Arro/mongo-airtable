@@ -91,3 +91,26 @@ gulp.task(`look-for-changes`, () => {
   })
 })
 
+
+gulp.task(`look-for-new-items`, () => {
+  return Promise.all(config.sync.map((table_to_sync) => {
+    const db =  mongo_client.connect(
+      `mongodb://localhost:27017/${table_to_sync.mongo_database}`,
+      { promiseLibrary: Promise }
+    )
+    let new_items = []
+    return Promise.all([db]).then(([db]) => {
+      const collection = db.collection(table_to_sync.mongo_collection)
+      return collection.find({ id: { $exists: false } }).toArray().then((no_id_records) => {
+        new_items = no_id_records
+        return db.close()
+      }).then(() => {
+        return sts(JSON.stringify(new_items, null, 4))
+          .pipe(vss(`${table_to_sync.airtable_table}_new.json`))
+          .pipe(gulp.dest(build))
+      })
+    })
+  })).then(() => {
+    return Promise.delay(1000)
+  })
+})
