@@ -36,9 +36,13 @@ gulp.task(`initial-insert`, () => {
     return Promise.all([db, data]).then(([db, data]) => {
       const collection = db.collection(table_to_sync.mongo_collection)
       return collection.remove({}).then(() => {
-        return collection.insert(data).then(() => {
+        if (data && data.length) {
+          return collection.insert(data).then(() => {
+            return db.close()
+          })
+        } else {
           return db.close()
-        })
+        }
       })
     })
   }))
@@ -46,6 +50,7 @@ gulp.task(`initial-insert`, () => {
 
 gulp.task(`look-for-changes`, () => {
   return Promise.all(config.sync.map((table_to_sync) => {
+    console.log(table_to_sync)
     const db =  mongo_client.connect(
       `mongodb://localhost:27017/${table_to_sync.mongo_database}`,
       { promiseLibrary: Promise }
@@ -56,11 +61,18 @@ gulp.task(`look-for-changes`, () => {
     })
 
     let changed = []
+    //let create = []
     return Promise.all([db, data]).then(([db, data]) => {
       const collection = db.collection(table_to_sync.mongo_collection)
+      console.log(data)
 
       return Promise.reduce(data, ((total, airtable_record) => {
         return collection.findOne({ id: airtable_record.id }).then((mongo_record) => {
+          if (!mongo_record) {
+            console.log(`couldn't find ${airtable_record}`)
+            return Promise.resolve(true)
+          }
+
           delete mongo_record._id
           if (!deepEqual(airtable_record, mongo_record)) {
 
