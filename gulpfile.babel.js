@@ -6,4 +6,5 @@ requireDir(`./gulp`, { recurse: true });
 gulp.task(`default`, gulp.parallel(`watch`))
 
 gulp.task(`pull`,  gulp.series(`initial-pull`, `initial-insert`))
-gulp.task(`push`,  gulp.series(`look-for-changes`, `look-for-new-items`, `push-changed`, `create-new`))
+gulp.task(`push`,  gulp.series(`look-for-changes`, `look-for-new-items`)) //, `push-changed`, `create-new`))
+gulp.task(`push`,  gulp.series(`look-for-new-items`, `create-new`))
