@@ -1,0 +1,35 @@
+config:
+  auth:
+    airtable: keynAUlDBF1jIwFQs
+  sync:
+    - airtable_base: appONgCVcQBqnpaJl  
+      airtable_table: Songs 
+      airtable_view: Main View 
+      mongo_database: main
+      mongo_collection: songs  
+    - airtable_base: appONgCVcQBqnpaJl  
+      airtable_table: Tags 
+      airtable_view: Main View 
+      mongo_database: main
+      mongo_collection: tags  
+    - airtable_base: appONgCVcQBqnpaJl  
+      airtable_table: Colors 
+      airtable_view: Main View 
+      mongo_database: main
+      mongo_collection: colors  
+    - airtable_base: appONgCVcQBqnpaJl  
+      airtable_table: Effects 
+      airtable_view: Main View 
+      mongo_database: main
+      mongo_collection: effects  
+    - airtable_base: appONgCVcQBqnpaJl  
+      airtable_table: Mixes 
+      airtable_view: Main View 
+      mongo_database: main
+      mongo_collection: mixes  
+    - airtable_base: appONgCVcQBqnpaJl  
+      airtable_table: Fragments 
+      airtable_view: Main
+      mongo_database: main
+      mongo_collection: fragments  
+      lookups_to_flatten: ['Key', 'BPM', 'Tags', 'Rating']
