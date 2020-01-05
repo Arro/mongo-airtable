@@ -1,6 +1,6 @@
 {
   "name": "mongo-airtable",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Keep Airtable tables synced with local MongoDB collections",
   "author": "Phil Deschaine",
   "license": "MIT",
@@ -15,7 +15,6 @@
     "airtable-json": "github:arro/airtable-json",
     "babel-eslint": "^10.0.3",
     "deep-equal": "^2.0.1",
-    "del": "^2.2.1",
     "eslint": "^6.7.2",
     "eslint-plugin-babel": "^3.3.0",
     "eslint-plugin-react": "^7.17.0",

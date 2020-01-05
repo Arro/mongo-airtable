@@ -18,7 +18,6 @@ const config = nconf.env({ separator: `__`, match: new RegExp(`^config.*`) })
   .config
 
 const url = `mongodb://localhost:27017`
-const client = new MongoClient(url, { useUnifiedTopology: true })
 
 export async function initialInsert() {
   // you can pass in --filter Fragments to just update that
@@ -33,6 +32,7 @@ export async function initialInsert() {
   }
 
   for (const table_to_sync of sync) {
+    const client = new MongoClient(url, { useUnifiedTopology: true })
     const connection = await client.connect()
     const db = connection.db(table_to_sync.mongo_database)
 
@@ -65,6 +65,7 @@ export async function lookForChanges() {
   }
 
   for (const table_to_sync of sync) {
+    const client = new MongoClient(url, { useUnifiedTopology: true })
     const connection = await client.connect()
     const db = connection.db(table_to_sync.mongo_database)
 
@@ -129,6 +130,7 @@ export async function lookForNewItems() {
   }
 
   for (const table_to_sync of sync) {
+    const client = new MongoClient(url, { useUnifiedTopology: true })
     const connection = await client.connect()
     const db = connection.db(table_to_sync.mongo_database)
 
