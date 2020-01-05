@@ -11,7 +11,7 @@ const readFile = util.promisify(fs.readFile)
 const writeFile = util.promisify(fs.writeFile)
 
 const config = nconf.env({ separator: `__`, match: new RegExp(`^config.*`) })
-  .file({ file: path.resolve(`${__dirname}/config.yaml`), format: nconfYAML })
+  .file({ file: path.resolve(`${__dirname}/../config.yaml`), format: nconfYAML })
   .get()
   .config
 
@@ -38,7 +38,7 @@ async function pullTable(table_to_sync) {
   })
 
   const records_as_json_string = JSON.stringify(records, null, 4)
-  const filename = path.resolve(`${__dirname}/build/${table_to_sync.airtable_table}.json`)
+  const filename = path.resolve(`${__dirname}/${table_to_sync.airtable_table}.json`)
 
   return await writeFile(filename, records_as_json_string, `utf-8`)
 }
@@ -63,7 +63,7 @@ export async function initialPull() {
 
 async function pushChangedTable(table_to_sync) {
   const base = airtable.base(table_to_sync.airtable_base)
-  const filename = path.resolve(`${__dirname}/build/${table_to_sync.airtable_table}_changed.json`)
+  const filename = path.resolve(`${__dirname}/${table_to_sync.airtable_table}_changed.json`)
 
   let data = await readFile(filename)
   data = JSON.parse(data)
@@ -78,7 +78,16 @@ async function pushChangedTable(table_to_sync) {
 
 
 export async function pushChanged() {
-  for (const table of config.sync) {
+  const filter = ``
+  let sync = config.sync
+
+  if (filter) {
+    sync = _.filter(sync, (table) => {
+      return table.airtable_table === filter
+    })
+  }
+
+  for (const table of sync) {
     await pushChangedTable(table)
   }
 }
@@ -86,7 +95,7 @@ export async function pushChanged() {
 
 async function createNewRecordsInTable(table_to_sync) {
   const base = airtable.base(table_to_sync.airtable_base)
-  const filename = path.resolve(`${__dirname}/build/${table_to_sync.airtable_table}_new.json`)
+  const filename = path.resolve(`${__dirname}/${table_to_sync.airtable_table}_new.json`)
 
   let data = await readFile(filename)
   data = JSON.parse(data)
@@ -108,7 +117,16 @@ async function createNewRecordsInTable(table_to_sync) {
 }
 
 export async function createNew() {
-  for (const table of config.sync) {
+  const filter = ``
+  let sync = config.sync
+
+  if (filter) {
+    sync = _.filter(sync, (table) => {
+      return table.airtable_table === filter
+    })
+  }
+
+  for (const table of sync) {
     await createNewRecordsInTable(table)
   }
 }
