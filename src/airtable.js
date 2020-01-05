@@ -15,14 +15,13 @@ const config = nconf.env({ separator: `__`, match: new RegExp(`^config.*`) })
   .get()
   .config
 
-airtable.configure({ apiKey: config.auth.airtable })
-
 
 async function pullTable(table_to_sync) {
   console.log(`starting sync of ${table_to_sync.airtable_table}`)
 
   let records = await airtableJson({
-    base: airtable.base(table_to_sync.airtable_base),
+    auth_key: config.auth.airtable,
+    base_name: table_to_sync.airtable_base,
     primary: table_to_sync.airtable_table,
     view: table_to_sync.airtable_view,
     populate: [],
@@ -46,7 +45,7 @@ async function pullTable(table_to_sync) {
 
 export async function initialPull() {
   // you can pass in --filter Fragments to just update that
-  const filter = ``
+  const filter = `Colors`
   let sync = config.sync
 
   if (filter) {
