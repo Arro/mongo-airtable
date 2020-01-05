@@ -39,16 +39,21 @@ look like the following.
           airtable_view: <your airtable view name (e.g. 'Main View')>
           mongo_database: <a mongo db name (e.g. 'main')>
           mongo_collection: <a mongo db collection name (e.g. 'songs')>
+        - airtable_base: <your airtable base key (starts with 'app')>
+          airtable_table: <your airtable table name (e.g. 'Songs')>
+          airtable_view: <your airtable view name (e.g. 'Main View')>
+          mongo_database: <another mongo db name (e.g. 'main')>
+          mongo_collection: <another mongo db collection name (e.g. 'songs')>
 
-Run `yarn install` (or `npm install`).  Now you're ready to go.
+Run `npm install` (or `yarn install`).  Now you're ready to go.
 
 When you want to pull from airtable down to your mongodb collection, run: 
 
-    gulp pull
+    npm run pull
 
 Later, once you made changes to your mongodb collection, run:
 
-    gulp push
+    npm run push
 
 Ideally, you should run `gulp pull` before you're going to go offline, and
 run `gulp push` when you're back online.  
