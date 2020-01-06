@@ -64,6 +64,8 @@ export async function lookForChanges() {
     })
   }
 
+  console.log(sync)
+
   for (const table_to_sync of sync) {
     const client = new MongoClient(url, { useUnifiedTopology: true })
     const connection = await client.connect()
@@ -130,6 +132,7 @@ export async function lookForNewItems() {
   }
 
   for (const table_to_sync of sync) {
+    console.log(table_to_sync)
     const client = new MongoClient(url, { useUnifiedTopology: true })
     const connection = await client.connect()
     const db = connection.db(table_to_sync.mongo_database)
@@ -139,6 +142,8 @@ export async function lookForNewItems() {
 
     const collection = await db.collection(table_to_sync.mongo_collection)
     let no_id_records = await collection.find({ __id: { $exists: false } }).toArray()
+
+    console.log(no_id_records)
 
     no_id_records = no_id_records.map((record) => {
       delete record._id

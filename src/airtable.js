@@ -15,6 +15,7 @@ const config = nconf.env({ separator: `__`, match: new RegExp(`^config.*`) })
   .get()
   .config
 
+airtable.configure({ apiKey: config.auth.airtable })
 
 async function pullTable(table_to_sync) {
   console.log(`starting sync of ${table_to_sync.airtable_table}`)
@@ -64,7 +65,12 @@ async function pushChangedTable(table_to_sync) {
   const base = airtable.base(table_to_sync.airtable_base)
   const filename = path.resolve(`${__dirname}/${table_to_sync.airtable_table}_changed.json`)
 
-  let data = await readFile(filename)
+  let data
+  try {
+    data = await readFile(filename)
+  } catch {
+    return
+  }
   data = JSON.parse(data)
 
   for (const record of data) {
@@ -96,7 +102,13 @@ async function createNewRecordsInTable(table_to_sync) {
   const base = airtable.base(table_to_sync.airtable_base)
   const filename = path.resolve(`${__dirname}/${table_to_sync.airtable_table}_new.json`)
 
-  let data = await readFile(filename)
+  let data
+  try {
+    data = await readFile(filename)
+  } catch {
+    return
+  }
+
   data = JSON.parse(data)
 
   const unflatten = table_to_sync.unflatten || []
