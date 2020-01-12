@@ -1,0 +1,30 @@
+const headers = [
+  'access-control-allow-headers',
+  'authorization,content-length,content-type,user-agent,x-airtable-application-id,x-airtable-user-agent,x-api-version,x-requested-with',
+  'access-control-allow-methods',
+  'DELETE,GET,OPTIONS,PATCH,POST,PUT',
+  'access-control-allow-origin',
+  '*',
+  'Content-Type',
+  'application/json; charset=utf-8',
+  'Date',
+  'Thu, 09 Jan 2020 04:38:31 GMT',
+  'etag',
+  'W/"0000000000000000000000000000000"',
+  'Server',
+  'Tengine',
+  'Set-Cookie',
+  'brw=brwtVoohmmtmLHIbz; path=/; expires=Sat, 09 Jan 2021 04:38:31 GMT; domain=.airtable.com; secure; httponly',
+  'Strict-Transport-Security',
+  'max-age=31536000; includeSubDomains; preload',
+  'Vary',
+  'Accept-Encoding',
+  'x-airtable-has-non-empty-changes-payload',
+  'false',
+  'Content-Length',
+  '4020',
+  'Connection',
+  'Close'
+]
+
+export default headers

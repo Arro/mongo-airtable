@@ -10,6 +10,8 @@ import fs from 'fs'
 const readFile = util.promisify(fs.readFile)
 const writeFile = util.promisify(fs.writeFile)
 
+const global_filter = ``
+
 const config = nconf.env({ separator: `__`, match: new RegExp(`^config.*`) })
   .file({ file: path.resolve(`${__dirname}/../config.yaml`), format: nconfYAML })
   .get()
@@ -17,18 +19,16 @@ const config = nconf.env({ separator: `__`, match: new RegExp(`^config.*`) })
 
 airtable.configure({ apiKey: config.auth.airtable })
 
-async function pullTable(table_to_sync) {
-  console.log(`starting sync of ${table_to_sync.airtable_table}`)
+export async function pullTable({ auth_key,  base_name, primary, view, populate=[], flatten=[] }) {
+  console.log(`starting sync of ${primary}`)
 
   let records = await airtableJson({
-    auth_key: config.auth.airtable,
-    base_name: table_to_sync.airtable_base,
-    primary: table_to_sync.airtable_table,
-    view: table_to_sync.airtable_view,
-    populate: [],
+    auth_key,
+    base_name,
+    primary,
+    view,
+    populate,
   })
-
-  const flatten = table_to_sync.flatten || []
 
   records = records.map((record) => {
     flatten.forEach((f) => {
@@ -38,7 +38,8 @@ async function pullTable(table_to_sync) {
   })
 
   const records_as_json_string = JSON.stringify(records, null, 4)
-  const filename = path.resolve(`${__dirname}/${table_to_sync.airtable_table}.json`)
+  const filename = path.resolve(`${__dirname}/../build/${primary}.json`)
+  console.log(filename)
 
   return await writeFile(filename, records_as_json_string, `utf-8`)
 }
@@ -46,7 +47,7 @@ async function pullTable(table_to_sync) {
 
 export async function initialPull() {
   // you can pass in --filter Fragments to just update that
-  const filter = `Colors`
+  const filter = global_filter
   let sync = config.sync
 
   if (filter) {
@@ -83,7 +84,7 @@ async function pushChangedTable(table_to_sync) {
 
 
 export async function pushChanged() {
-  const filter = ``
+  const filter = global_filter
   let sync = config.sync
 
   if (filter) {
@@ -128,7 +129,7 @@ async function createNewRecordsInTable(table_to_sync) {
 }
 
 export async function createNew() {
-  const filter = ``
+  const filter = global_filter
   let sync = config.sync
 
   if (filter) {

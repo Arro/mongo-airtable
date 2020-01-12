@@ -12,6 +12,8 @@ import fs from 'fs'
 const readFile = util.promisify(fs.readFile)
 const writeFile = util.promisify(fs.writeFile)
 
+const global_filter = ``
+
 const config = nconf.env({ separator: `__`, match: new RegExp(`^config.*`) })
   .file({ file: path.resolve(`${__dirname}/../config.yaml`), format: nconfYAML })
   .get()
@@ -19,9 +21,10 @@ const config = nconf.env({ separator: `__`, match: new RegExp(`^config.*`) })
 
 const url = `mongodb://localhost:27017`
 
+
 export async function initialInsert() {
   // you can pass in --filter Fragments to just update that
-  const filter = ``
+  const filter = global_filter
 
   let sync = config.sync
 
@@ -54,7 +57,7 @@ export async function initialInsert() {
 
 export async function lookForChanges() {
   // you can pass in --filter Fragments to just update that
-  const filter = ``
+  const filter = global_filter
 
   let sync = config.sync
 
@@ -121,7 +124,7 @@ export async function lookForChanges() {
 
 export async function lookForNewItems() {
   // you can pass in --filter Fragments to just update that
-  const filter = ``
+  const filter = global_filter
 
   let sync = config.sync
 
