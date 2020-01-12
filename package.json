@@ -18,6 +18,7 @@
     "@ava/babel": "^0.7.0",
     "@babel/cli": "^7.5.5",
     "@babel/core": "^7.5.5",
+    "babel-eslint": "^10.0.3",
     "@babel/plugin-transform-runtime": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
@@ -27,7 +28,8 @@
     "eslint": "^6.8.0",
     "eslint-plugin-babel": "^5.3.0",
     "esm": "^3.2.25",
-    "nock": "^11.7.2"
+    "nock": "^11.7.2",
+    "nyc": "^15.0.0"
   },
   "ava": {
     "babel": {
@@ -60,11 +62,20 @@
       "esm"
     ]
   },
+  "nyc": {
+    "all": true,
+    "include": [
+      "src/**/*.js"
+    ],
+    "exclude": [
+      "src/run/*.js"
+    ]
+  },
   "engines": {
     "node": ">=13.5.0"
   },
   "scripts": {
-    "test": "npx ava",
+    "test": "npx nyc ava",
     "transpile": "npx babel src --out-dir build",
     "initial-pull": "node ./build/run/initial-pull.js",
     "create-new": "node ./build/run/create-new.js",
