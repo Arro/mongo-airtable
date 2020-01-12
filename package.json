@@ -9,10 +9,8 @@
     "airtable-json": "^1.2.5",
     "deep-equal": "^2.0.1",
     "mongodb": "^3.4.1",
-    "nconf": "^0.10.0",
-    "nconf-yaml": "^1.0.2",
     "npm-run-all": "^4.1.5",
-    "yamljs": "^0.2.8"
+    "yaml": "^1.7.2"
   },
   "devDependencies": {
     "@ava/babel": "^0.7.0",
@@ -56,7 +54,8 @@
       }
     },
     "files": [
-      "test/main.js"
+      "test/pull-table.js",
+      "test/initial-pull.js"
     ],
     "require": [
       "esm"

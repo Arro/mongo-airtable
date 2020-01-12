@@ -1,23 +1,12 @@
 import path from 'path'
-import nconf from 'nconf'
-import nconfYAML from 'nconf-yaml'
-import airtable from 'airtable'
+// import airtable from 'airtable'
 import airtableJson from 'airtable-json'
-import _ from 'lodash'
 
 import util from 'util'
 import fs from 'fs'
+import yaml from 'yaml'
 const readFile = util.promisify(fs.readFile)
 const writeFile = util.promisify(fs.writeFile)
-
-const global_filter = ``
-
-const config = nconf.env({ separator: `__`, match: new RegExp(`^config.*`) })
-  .file({ file: path.resolve(`${__dirname}/../config.yaml`), format: nconfYAML })
-  .get()
-  .config
-
-airtable.configure({ apiKey: config.auth.airtable })
 
 export async function pullTable({ auth_key,  base_name, primary, view, populate=[], flatten=[] }) {
   console.log(`starting sync of ${primary}`)
@@ -39,30 +28,26 @@ export async function pullTable({ auth_key,  base_name, primary, view, populate=
 
   const records_as_json_string = JSON.stringify(records, null, 4)
   const filename = path.resolve(`${__dirname}/../build/${primary}.json`)
-  console.log(filename)
 
   return await writeFile(filename, records_as_json_string, `utf-8`)
 }
 
+export async function initialPull(config_path) {
+  let config = await readFile(config_path, 'utf-8')
+  config = yaml.parse(config)
 
-export async function initialPull() {
-  // you can pass in --filter Fragments to just update that
-  const filter = global_filter
-  let sync = config.sync
-
-  if (filter) {
-    sync = _.filter(sync, (table) => {
-      return table.airtable_table === filter
+  for (const table_to_sync of config.sync) {
+    await pullTable({
+      ...table_to_sync,
+      auth_key: config.auth.airtable
     })
-  }
-
-  for (const table_to_sync of sync) {
-    await pullTable(table_to_sync)
   }
 }
 
-
+/*
 async function pushChangedTable(table_to_sync) {
+
+  airtable.configure({ apiKey: config.auth.airtable })
   const base = airtable.base(table_to_sync.airtable_base)
   const filename = path.resolve(`${__dirname}/${table_to_sync.airtable_table}_changed.json`)
 
@@ -81,7 +66,6 @@ async function pushChangedTable(table_to_sync) {
   const records_as_json_string = JSON.stringify([], null, 4)
   return await writeFile(filename, records_as_json_string, `utf-8`)
 }
-
 
 export async function pushChanged() {
   const filter = global_filter
@@ -142,4 +126,5 @@ export async function createNew() {
     await createNewRecordsInTable(table)
   }
 }
+*/
 
