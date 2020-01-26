@@ -1,0 +1,22 @@
+{
+  "records": [
+    {
+      "id": "rec11",
+      "fields": {
+        "Name": "Hockey",
+        "Type": "Team",
+        "Network": [ "NBC" ] 
+      },
+      "createdTime": "2019-02-08T05:11:18.000Z"
+    },
+    {
+      "id": "rec12",
+      "fields": {
+        "Name": "Football",
+        "Type": "Team",
+        "Network": [ "CBS" ] 
+      },
+      "createdTime": "2019-02-08T05:11:18.000Z"
+    }
+  ]
+}

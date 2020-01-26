@@ -8,7 +8,7 @@ import yaml from 'yaml'
 const readFile = util.promisify(fs.readFile)
 const writeFile = util.promisify(fs.writeFile)
 
-export async function pullTable({ auth_key,  base_name, primary, view, populate=[], flatten=[] }) {
+export async function pullTable({ auth_key,  base_name, primary, view, filter, populate=[], flatten=[] }) {
   console.log(`starting sync of ${primary}`)
 
   let records = await airtableJson({
@@ -16,7 +16,17 @@ export async function pullTable({ auth_key,  base_name, primary, view, populate=
     base_name,
     primary,
     view,
-    populate,
+    filter,
+    populate
+  })
+
+  console.log({
+    auth_key,
+    base_name,
+    primary,
+    view,
+    filter,
+    populate
   })
 
   records = records.map((record) => {

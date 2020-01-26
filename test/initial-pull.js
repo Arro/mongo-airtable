@@ -18,14 +18,17 @@ test("run function correctly", async(t) => {
   let config = await readFile(filename, 'utf-8')
   config = yaml.parse(config)
   
-  for (const { base_name, primary, view, collection } of config.sync) {
+  for (const { base_name, primary, view, filter, collection } of config.sync) {
     const fixture_filename = path.resolve(`${__dirname}/../test/fixtures/${collection}.json`)
     let fixture_data = await readFile(fixture_filename, 'utf-8')
     fixture_data = JSON.parse(fixture_data)
 
     nock('https://api.airtable.com:443', { encodedQueryParams: true })
       .get(`/v0/${base_name}/${primary}`)
-      .query({ view })
+      .query({
+        view,
+        ...filter && { filterByFormula: filter }
+      })
       .reply(200, fixture_data, headers)
   }
 
