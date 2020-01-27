@@ -1,0 +1,26 @@
+[
+  {
+    "__id": "recFurn0",
+    "Id": "furn-000",
+    "Name": "Old couch in the living room",
+    "Owner": [ "Jack" ],
+    "Type": "Couch",
+    "Material": "Leather"
+  },
+  {
+    "__id": "recFurn1",
+    "Id": "furn-001",
+    "Name": "Jack's kitchen table",
+    "Owner": [ "Jack" ],
+    "Type": "Table",
+    "Material": "Wood"
+  },
+  {
+    "__id": "recFurn2",
+    "Id": "furn-002",
+    "Name": "Jill's house plant",
+    "Owner": [ "Jill" ],
+    "Type": "Plant",
+    "Material": "Biological"
+  }
+]

@@ -1,6 +1,6 @@
 {
   "name": "mongo-airtable",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Keep Airtable tables synced with local MongoDB collections",
   "author": "Phil Deschaine",
   "license": "MIT",
@@ -16,16 +16,17 @@
     "@ava/babel": "^0.7.0",
     "@babel/cli": "^7.5.5",
     "@babel/core": "^7.5.5",
-    "babel-eslint": "^10.0.3",
     "@babel/plugin-transform-runtime": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
     "@babel/runtime": "^7.8.0",
     "@babel/runtime-corejs3": "^7.5.5",
     "ava": "^2.4.0",
+    "babel-eslint": "^10.0.3",
     "eslint": "^6.8.0",
     "eslint-plugin-babel": "^5.3.0",
     "esm": "^3.2.25",
+    "mkdirp": "^1.0.3",
     "nock": "^11.7.2",
     "nyc": "^15.0.0"
   },
@@ -55,7 +56,11 @@
     },
     "files": [
       "test/pull-table.js",
-      "test/initial-pull.js"
+      "test/initial-pull.js",
+      "test/put-into-db.js"
+    ],
+    "@comment files": [
+      "test/initial-insert.js"
     ],
     "require": [
       "esm"

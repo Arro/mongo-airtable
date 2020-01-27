@@ -18,7 +18,6 @@
     "new-cap": [2, {"capIsNew": false}],
     "no-trailing-spaces": [2, { "skipBlankLines": true }],
     "func-names": [2],
-    "arrow-parens": [2, "always"],
     "no-console": [0]
   },
   "plugins": ["babel"]

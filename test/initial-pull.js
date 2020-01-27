@@ -34,12 +34,14 @@ test("run function correctly", async(t) => {
 
   await initialPull(filename)
 
-  for (const { primary, collection } of config.sync) {
+  for (const { primary, collection, database } of config.sync) {
     const fixture_filename = path.resolve(`${__dirname}/../test/fixtures/${collection}.json`)
     let fixture_data = await readFile(fixture_filename, 'utf-8')
     fixture_data = JSON.parse(fixture_data)
 
-    const output_filename  = path.resolve(`${__dirname}/../build/${primary}.json`)
+    const output_dirname = path.resolve(`${__dirname}/../build/${database}`)
+    const output_filename = path.resolve(`${output_dirname}/${primary}.json`)
+
     let output_data = await readFile(output_filename, 'utf-8')
     output_data = JSON.parse(output_data)
 

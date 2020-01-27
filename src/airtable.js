@@ -5,22 +5,15 @@ import airtableJson from 'airtable-json'
 import util from 'util'
 import fs from 'fs'
 import yaml from 'yaml'
+import mkdirp from 'mkdirp'
+
 const readFile = util.promisify(fs.readFile)
 const writeFile = util.promisify(fs.writeFile)
 
-export async function pullTable({ auth_key,  base_name, primary, view, filter, populate=[], flatten=[] }) {
+export async function pullTable({ auth_key,  base_name, primary, view, database, filter, populate=[], flatten=[] }) {
   console.log(`starting sync of ${primary}`)
 
   let records = await airtableJson({
-    auth_key,
-    base_name,
-    primary,
-    view,
-    filter,
-    populate
-  })
-
-  console.log({
     auth_key,
     base_name,
     primary,
@@ -36,10 +29,12 @@ export async function pullTable({ auth_key,  base_name, primary, view, filter, p
     return record
   })
 
+  const json_dirname = path.resolve(`${__dirname}/../build/${database}`)
+  await mkdirp(json_dirname)
+  const json_filename = path.resolve(`${json_dirname}/${primary}.json`)
   const records_as_json_string = JSON.stringify(records, null, 4)
-  const filename = path.resolve(`${__dirname}/../build/${primary}.json`)
 
-  return await writeFile(filename, records_as_json_string, `utf-8`)
+  return await writeFile(json_filename, records_as_json_string, `utf-8`)
 }
 
 export async function initialPull(config_path) {

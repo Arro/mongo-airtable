@@ -16,6 +16,7 @@ const readFile = util.promisify(fs.readFile)
 
 test.beforeEach(async(t) => {
   const primary = "Songs1"
+  const database = "test"
   const view = "Main"
 
   nock('https://api.airtable.com:443', { encodedQueryParams: true })
@@ -27,11 +28,14 @@ test.beforeEach(async(t) => {
     auth_key,
     base_name,
     primary,
+    database,
     view
   })
 
-  const filename = path.resolve(`${__dirname}/../build/${primary}.json`)
-  const file_contents = await readFile(filename)
+  const json_dirname = path.resolve(`${__dirname}/../build/${database}`)
+  const json_filename = path.resolve(`${json_dirname}/${primary}.json`)
+
+  const file_contents = await readFile(json_filename)
   t.context.data = JSON.parse(file_contents)
 })
 

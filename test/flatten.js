@@ -41,7 +41,7 @@ test.beforeEach(async(t) => {
 
 test("flatten works correctly", (t) => {
   t.is(t.context.data[0]._id, sports_response.records[0].id)
-  t.is(t.context.data[0].Network, "NBC")
+  t.is(t.context.data[0].Network, sports_response.records[0].Network[0])
 })
 
 test("flatten works correctly again", (t) => {

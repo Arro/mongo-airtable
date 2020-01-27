@@ -1,0 +1,37 @@
+{
+  "records": [
+    {
+      "id": "recFurn0",
+      "fields": {
+        "Id": "furn-000",
+        "Name": "Old couch in the living room",
+        "Owner": [ "Jack" ],
+        "Type": "Couch",
+        "Material": "Leather"
+      },
+      "createdTime": "2020-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "recFurn1",
+      "fields": {
+        "Id": "furn-001",
+        "Name": "Jack's kitchen table",
+        "Owner": [ "Jack" ],
+        "Type": "Table",
+        "Material": "Wood"
+      },
+      "createdTime": "2020-01-02T00:00:00.000Z"
+    },
+    {
+      "id": "recFurn2",
+      "fields": {
+        "Id": "furn-002",
+        "Name": "Jill's house plant",
+        "Owner": [ "Jill" ],
+        "Type": "Plant",
+        "Material": "Biological"
+      },
+      "createdTime": "2020-01-03T00:00:00.000Z"
+    }
+  ]
+}
