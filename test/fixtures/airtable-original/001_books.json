@@ -1,0 +1,34 @@
+{
+  "records": [
+    {
+      "id": "recBook0",
+      "fields": {
+        "Id": "book-000",
+        "Name": "Deadhouse Gates",
+        "Author": [ "Steven Erikson" ],
+        "Genre": "Fantasy"
+      },
+      "createdTime": "2020-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "recBook1",
+      "fields": {
+        "Id": "book-001",
+        "Name": "Reaper's Gale",
+        "Author": [ "Steven Erikson" ],
+        "Genre": "Fantasy"
+      },
+      "createdTime": "2020-01-02T00:00:00.000Z"
+    },
+    {
+      "id": "recFurn2",
+      "fields": {
+        "Id": "book-003",
+        "Name": "The Martian",
+        "Owner": [ "Andy Weir" ],
+        "Genre": "Science Fiction"
+      },
+      "createdTime": "2020-01-03T00:00:00.000Z"
+    }
+  ]
+}

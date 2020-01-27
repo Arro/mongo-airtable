@@ -1,28 +1,28 @@
 import path from 'path'
 import { MongoClient } from 'mongodb'
-import yaml from 'yaml'
 
-//import deepEqual from 'deep-equal'
-//import { each } from 'lodash'
+import deepEqual from 'deep-equal'
+import { each } from 'lodash'
 
 import util from 'util'
 import fs from 'fs'
 const readFile = util.promisify(fs.readFile)
+const writeFile = util.promisify(fs.writeFile)
 
 const url = `mongodb://localhost:27017`
 
-export async function putIntoDB({ primary, mongo_collection, mongo_database }) {
+export async function putIntoDB({ primary, collection, database }) {
   const client = new MongoClient(url, { useUnifiedTopology: true })
   const connection = await client.connect()
-  const db = connection.db(mongo_database)
-  const collection = db.collection(mongo_collection)
+  const db = connection.db(database)
+  collection = db.collection(collection)
 
-  const filename = path.resolve(`${__dirname}/../build/test/${primary}.json`)
+  const filename = path.resolve(`${__dirname}/../build/${database}/${primary}.json`)
 
   let data = await readFile(filename)
   data = JSON.parse(data)
 
-  await collection.deleteMany({})
+  await collection.removeMany({})
 
   if (data && data.length) {
     await collection.insertMany(data)
@@ -31,13 +31,10 @@ export async function putIntoDB({ primary, mongo_collection, mongo_database }) {
 }
 
 
-export async function initialInsert(config_path) {
-  let config = await readFile(config_path, 'utf-8')
-  config = yaml.parse(config)
-
-  for (const { airtable_table, collection, database } of config.sync) {
+export async function initialInsert(config) {
+  for (const { primary, collection, database } of config.sync) {
     await putIntoDB({
-      airtable_table,
+      primary,
       collection,
       database
     })
@@ -45,35 +42,18 @@ export async function initialInsert(config_path) {
 }
 
 
-/*
-export async function lookForChanges() {
-  // you can pass in --filter Fragments to just update that
-  const filter = global_filter
-
-  let sync = config.sync
-
-  if (filter) {
-    sync = _.filter(sync, (table) => {
-      return table.airtable_table === filter
-    })
-  }
-
-  console.log(sync)
-
-  for (const table_to_sync of sync) {
+export async function lookForChanges(config) {
+  for (let { primary, database, collection, dont_sync = [] } of config.sync) {
     const client = new MongoClient(url, { useUnifiedTopology: true })
     const connection = await client.connect()
-    const db = connection.db(table_to_sync.mongo_database)
+    const db = connection.db(database)
+    collection = db.collection(collection)
 
-    const filename = path.resolve(`${__dirname}/${table_to_sync.airtable_table}.json`)
+    const filename = path.resolve(`${__dirname}/../build/${database}/${primary}.json`)
     let data = await readFile(filename)
     data = JSON.parse(data)
 
-    const dont_sync = table_to_sync.dont_sync || []
-
     let changed = []
-
-    const collection = db.collection(table_to_sync.mongo_collection)
 
     for (const airtable_record of data) {
       dont_sync.forEach((d) => {
@@ -107,12 +87,13 @@ export async function lookForChanges() {
     await connection.close()
 
     const records_as_json_string = JSON.stringify(changed, null, 4)
-    const changed_filename = path.resolve(`${__dirname}/${table_to_sync.airtable_table}_changed.json`)
+    const changed_filename = path.resolve(`${__dirname}/../build/${database}/${primary}_changed.json`)
     return await writeFile(changed_filename, records_as_json_string, `utf-8`)
   }
 }
 
 
+/*
 export async function lookForNewItems() {
   // you can pass in --filter Fragments to just update that
   const filter = global_filter

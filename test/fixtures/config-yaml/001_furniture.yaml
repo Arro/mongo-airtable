@@ -1,0 +1,8 @@
+auth:
+  airtable: key_fake
+sync:
+  - base_name: app_fake_1
+    primary: Furniture
+    view: Main
+    database: test
+    collection: furniture  

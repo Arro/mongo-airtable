@@ -1,0 +1,23 @@
+[
+  {
+    "__id": "recBook0",
+    "Id": "book-000",
+    "Name": "Deadhouse Gates",
+    "Author": [ "Steven Erikson" ],
+    "Genre": "Fantasy"
+  },
+  {
+    "__id": "recBook1",
+    "Id": "book-001",
+    "Name": "Reaper's Gale",
+    "Author": [ "Steven Erikson" ],
+    "Genre": "Fantasy"
+  },
+  {
+    "__id": "recFurn2",
+    "Id": "book-003",
+    "Name": "The Martian",
+    "Owner": [ "Andy Weir" ],
+    "Genre": "Science Fiction"
+  }
+]
