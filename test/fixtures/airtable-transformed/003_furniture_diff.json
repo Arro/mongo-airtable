@@ -1,8 +1,30 @@
-[
-    {
-        "id": "recFurn0",
-        "fields_changed": {
-            "Material": "Wool"
+{
+    "modified": [
+        {
+            "id": "recFurn0",
+            "modified_fields": {
+                "Material": "Wool"
+            }
         }
-    }
-]
+    ],
+    "deleted": [
+        {
+            "__id": "recFurn2",
+            "Id": "furn-002",
+            "Name": "Jill's house plant",
+            "Owner": [
+                "Jill"
+            ],
+            "Type": "Plant",
+            "Material": "Biological"
+        }
+    ],
+    "recent": [
+        {
+            "Id": "furn-003",
+            "Name": "Jill's chair",
+            "Type": "Chair",
+            "Material": "Wood"
+        }
+    ]
+}

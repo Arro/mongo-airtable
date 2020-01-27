@@ -6,3 +6,4 @@ sync:
     view: Main
     database: test
     collection: furniture  
+    flatten: [ 'Owner' ]

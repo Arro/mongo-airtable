@@ -2,7 +2,6 @@ import path from 'path'
 import { MongoClient } from 'mongodb'
 
 import deepEqual from 'deep-equal'
-import { each } from 'lodash'
 
 import util from 'util'
 import fs from 'fs'
@@ -24,9 +23,8 @@ export async function putIntoDB({ primary, collection, database }) {
 
   await collection.removeMany({})
 
-  if (data && data.length) {
-    await collection.insertMany(data)
-  }
+  await collection.insertMany(data)
+
   await connection.close()
 }
 
@@ -43,97 +41,63 @@ export async function initialInsert(config) {
 
 
 export async function lookForChanges(config) {
-  for (let { primary, database, collection, dont_sync = [] } of config.sync) {
+  for (let { primary, database, collection, flatten} of config.sync) {
     const client = new MongoClient(url, { useUnifiedTopology: true })
     const connection = await client.connect()
     const db = connection.db(database)
     collection = db.collection(collection)
 
     const filename = path.resolve(`${__dirname}/../build/${database}/${primary}.json`)
-    let data = await readFile(filename)
-    data = JSON.parse(data)
+    let airtable_records = await readFile(filename)
+    airtable_records = JSON.parse(airtable_records)
 
-    let changed = []
 
-    for (const airtable_record of data) {
-      dont_sync.forEach((d) => {
-        delete airtable_record[d]
-      })
+    let modified = []
+    let deleted = []
 
+    for (const airtable_record of airtable_records) {
       let mongo_record = await collection.findOne({ __id: airtable_record.__id })
+
       if (!mongo_record) {
-        console.log(`couldn't find ${airtable_record}`)
-      } else {
-        delete mongo_record._id
-        dont_sync.forEach((d) => {
-          delete mongo_record[d]
-        })
+        deleted.push(airtable_record)
+        continue
+      }
 
-        if (!deepEqual(airtable_record, mongo_record)) {
-          let fields_changed = {}
-          each(mongo_record, (value, field_name) => {
-            if (!deepEqual(airtable_record[field_name], mongo_record[field_name])) {
-              fields_changed[field_name] = mongo_record[field_name]
-            }
-          })
+      delete mongo_record._id
+      for (const d of flatten) {
+        delete airtable_record[d]
+        delete mongo_record[d]
+      }
 
-          changed.push({
-            id: airtable_record.__id,
-            fields_changed
-          })
-        }
+      if (deepEqual(airtable_record, mongo_record)) continue
+
+      let modified_fields = {}
+      for (const field in mongo_record) {
+        if (deepEqual(airtable_record[field], mongo_record[field])) continue
+        modified_fields[field] = mongo_record[field]
+      }
+
+      modified.push({
+        id: airtable_record.__id,
+        modified_fields
+      })
+      
+    }
+
+    let recent = await collection.find({ __id: { $exists: false } }).toArray()
+
+    for (let record of recent) {
+      delete record._id
+      for (const d of flatten) {
+        delete record[d]
       }
     }
-    await connection.close()
 
-    const records_as_json_string = JSON.stringify(changed, null, 4)
-    const changed_filename = path.resolve(`${__dirname}/../build/${database}/${primary}_changed.json`)
-    return await writeFile(changed_filename, records_as_json_string, `utf-8`)
+    const json_string = JSON.stringify({ modified, deleted, recent }, null, 4)
+    const json_filename = path.resolve(`${__dirname}/../build/${database}/${primary}_diff.json`)
+    await writeFile(json_filename, json_string, `utf-8`)
+
+    await connection.close()
   }
 }
 
-
-/*
-export async function lookForNewItems() {
-  // you can pass in --filter Fragments to just update that
-  const filter = global_filter
-
-  let sync = config.sync
-
-  if (filter) {
-    sync = _.filter(sync, (table) => {
-      return table.airtable_table === filter
-    })
-  }
-
-  for (const table_to_sync of sync) {
-    console.log(table_to_sync)
-    const client = new MongoClient(url, { useUnifiedTopology: true })
-    const connection = await client.connect()
-    const db = connection.db(table_to_sync.mongo_database)
-
-    let new_items = []
-    const dont_create_with = table_to_sync.dont_create_with || []
-
-    const collection = await db.collection(table_to_sync.mongo_collection)
-    let no_id_records = await collection.find({ __id: { $exists: false } }).toArray()
-
-    console.log(no_id_records)
-
-    no_id_records = no_id_records.map((record) => {
-      delete record._id
-      dont_create_with.forEach((d) => {
-        delete record[d]
-      })
-      return record
-    })
-
-    new_items = no_id_records
-    await connection.close()
-
-    const records_as_json_string = JSON.stringify(new_items, null, 4)
-    const filename = path.resolve(`${__dirname}/${table_to_sync.airtable_table}_new.json`)
-    return await writeFile(filename, records_as_json_string, `utf-8`)
-  }
-}
-*/

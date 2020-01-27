@@ -4,7 +4,7 @@
     "Id": "furn-000",
     "Name": "Old couch in the living room",
     "Owner": [ "Jack" ],
-    "Type": "Couch",
+    "Type": "Couch" ,
     "Material": "Wool"
   },
   {
@@ -12,15 +12,14 @@
     "Id": "furn-001",
     "Name": "Jack's kitchen table",
     "Owner": [ "Jack" ],
-    "Type": "Table",
+    "Type": "Table" ,
     "Material": "Wood"
   },
   {
-    "__id": "recFurn2",
-    "Id": "furn-002",
-    "Name": "Jill's house plant",
+    "Id": "furn-003",
+    "Name": "Jill's chair",
     "Owner": [ "Jill" ],
-    "Type": "Plant",
-    "Material": "Biological"
+    "Type": "Chair" ,
+    "Material": "Wood"
   }
 ]

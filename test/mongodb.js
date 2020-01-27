@@ -119,19 +119,19 @@ test.serial("can loop through config tables", async(t) => {
 test.serial("can check for new ones", async(t) => {
   const { output_dirname, f_fixture_text, f2_fixture, db, config2, f3_fixture } = t.context
 
-  const f_output_filename = path.resolve(`${output_dirname}/Furniture.json`)
-  await writeFile(f_output_filename, f_fixture_text, 'utf-8')
+  const output_filename = path.resolve(`${output_dirname}/Furniture.json`)
+  await writeFile(output_filename, f_fixture_text, 'utf-8')
 
-  const f_collection = db.collection("furniture")
-  await f_collection.insertMany(f2_fixture)
+  const collection = db.collection("furniture")
+  await collection.insertMany(f2_fixture)
 
   await lookForChanges(config2)
 
-  const f_changed_filename = path.resolve(`${output_dirname}/Furniture_changed.json`)
-  const f_changed_text = await readFile(f_changed_filename, 'utf-8')
-  const f_changed = JSON.parse(f_changed_text)
+  const diff_filename = path.resolve(`${output_dirname}/Furniture_diff.json`)
+  const diff_text = await readFile(diff_filename, 'utf-8')
+  const diffs = JSON.parse(diff_text)
 
-  t.deepEqual(f_changed, f3_fixture)
+  t.deepEqual(diffs, f3_fixture)
 
 })
 
