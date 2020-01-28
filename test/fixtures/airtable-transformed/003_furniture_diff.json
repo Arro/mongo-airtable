@@ -12,9 +12,7 @@
             "__id": "recFurn2",
             "Id": "furn-002",
             "Name": "Jill's house plant",
-            "Owner": [
-                "Jill"
-            ],
+            "Owner": "Jill",
             "Type": "Plant",
             "Material": "Biological"
         }

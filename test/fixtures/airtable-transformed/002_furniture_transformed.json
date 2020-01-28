@@ -3,7 +3,7 @@
     "__id": "recFurn0",
     "Id": "furn-000",
     "Name": "Old couch in the living room",
-    "Owner": [ "Jack" ],
+    "Owner": "Jack",
     "Type": "Couch" ,
     "Material": "Wool"
   },
@@ -11,14 +11,14 @@
     "__id": "recFurn1",
     "Id": "furn-001",
     "Name": "Jack's kitchen table",
-    "Owner": [ "Jack" ],
+    "Owner": "Jack",
     "Type": "Table" ,
     "Material": "Wood"
   },
   {
     "Id": "furn-003",
     "Name": "Jill's chair",
-    "Owner": [ "Jill" ],
+    "Owner": "Jill",
     "Type": "Chair" ,
     "Material": "Wood"
   }
