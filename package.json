@@ -56,8 +56,7 @@
       }
     },
     "files": [
-      "test/pull-table.js",
-      "test/initial-pull.js",
+      "test/airtable.js",
       "test/mongodb.js"
     ],
     "@comment files": [],

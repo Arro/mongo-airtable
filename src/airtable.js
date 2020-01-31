@@ -4,10 +4,8 @@ import airtableJson from 'airtable-json'
 
 import util from 'util'
 import fs from 'fs'
-import yaml from 'yaml'
 import mkdirp from 'mkdirp'
 
-const readFile = util.promisify(fs.readFile)
 const writeFile = util.promisify(fs.writeFile)
 
 export async function pullTable({ auth_key,  base_name, primary, view, database, filter, populate=[], flatten=[] }) {
@@ -37,10 +35,7 @@ export async function pullTable({ auth_key,  base_name, primary, view, database,
   return await writeFile(json_filename, records_as_json_string, `utf-8`)
 }
 
-export async function initialPull(config_path) {
-  let config = await readFile(config_path, 'utf-8')
-  config = yaml.parse(config)
-
+export async function initialPull(config) {
   for (const table_to_sync of config.sync) {
     await pullTable({
       ...table_to_sync,

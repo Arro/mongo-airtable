@@ -1,0 +1,10 @@
+auth:
+  airtable: key_fake
+sync:
+  - base_name: app_fake_2
+    primary: Sports
+    filter: "Type=Team"
+    flatten: [ "Network" ]
+    view: Main
+    database: test_a
+    collection: sports  
