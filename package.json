@@ -89,6 +89,7 @@
     "initial-insert": "node ./build/run/initial-insert.js",
     "look-for-changes": "node ./build/run/look-for-changes.js",
     "look-for-new-items": "node ./build/run/look-for-new-items.js",
+    "test1": "node ./build/run/test1.js",
     "pull": "npm-run-all -s transpile initial-pull initial-insert",
     "push": "npm-run-all -s transpile look-for-changes look-for-new-items create-new push-changed"
   }

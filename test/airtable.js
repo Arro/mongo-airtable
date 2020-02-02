@@ -3,7 +3,7 @@ import nock from 'nock'
 
 import headers from './fixtures/headers'
 
-import { initialPull, pullTable } from '../src/airtable'
+import { initialPull, pullTable, pushChangedTable } from '../src/airtable'
 
 import path from 'path'
 import util from 'util'
@@ -13,6 +13,7 @@ import mkdirp from 'mkdirp'
 import rimraf from 'rimraf'
 
 const readFile = util.promisify(fs.readFile)
+const writeFile = util.promisify(fs.writeFile)
 const removeFolder = util.promisify(rimraf)
 
 test.beforeEach(async(t) => {
@@ -24,6 +25,7 @@ test.beforeEach(async(t) => {
     s1: 'airtable-original/002_sports.json',
     s2: 'airtable-transformed/004_sports.json',
     s3: 'airtable-transformed/005_sports.json',
+    f3: 'airtable-transformed/003_furniture_diff.json',
     config: 'config-yaml/002_sports.yaml'
   }
   let fixture_texts = {}
@@ -35,15 +37,16 @@ test.beforeEach(async(t) => {
     if (filepath.endsWith('json')) fixtures[name] = JSON.parse(fixture_texts[name])
     if (filepath.endsWith('yaml')) fixtures[name] = yaml.parse(fixture_texts[name])
   }
-  
+
   t.context = {
     fixtures,
+    fixture_texts,
     output_dirname,
   }
 })
 
 
-test.serial("run function correctly", async(t) => {
+test.serial("run initial pull", async(t) => {
   const { output_dirname, fixtures } = t.context
   const { s1, s2, config } = fixtures
 
@@ -65,7 +68,7 @@ test.serial("run function correctly", async(t) => {
 })
 
 
-test.serial("run function correctly 2", async(t) => {
+test.serial("run pull table directly", async(t) => {
   const { output_dirname, fixtures } = t.context
   const { s1, s3 } = fixtures
 
@@ -91,3 +94,51 @@ test.serial("run function correctly 2", async(t) => {
   t.deepEqual(s3, output_data)
 
 })
+
+test.serial("push changed table", async(t) => {
+  const { fixture_texts, output_dirname } = t.context
+  const { f3 } = fixture_texts
+
+  const diff_filename =  path.resolve(`${output_dirname}/Furniture_diff.json`)
+  await writeFile(diff_filename, f3, 'utf-8')
+
+  nock('https://api.airtable.com:443', { encodedQueryParams: true})
+    .patch('/v0/app_fake_2/Furniture/', {
+      records: [{
+        id: "recFurn0",
+        fields: {
+          Material: "Wool"
+        }
+      }]
+    })
+    .query({})
+    .reply(200, {
+      records: [{
+        id: "recFurn0",
+        fields: {
+          Id: "furn-000",
+          Name: "Old couch in the living room",
+          Owner: [ "Jack" ],
+          Type: "Couch",
+          Material: "Wool"
+        },
+        createdTime:"2020-01-05T09:46:07.000Z"
+      }]
+    }, headers)
+  ;
+
+  await pushChangedTable({
+    auth_key: 'key1',
+    base_name: "app_fake_2",
+    primary: "Furniture",
+    database: "test_a",
+  })
+
+  let output_data = await readFile(diff_filename, 'utf-8')
+  output_data = JSON.parse(output_data)
+
+  t.deepEqual([], output_data.modified)
+
+})
+
+  //.reply(422, {"error":{"type":"ROW_DOES_NOT_EXIST","message":"Record ID recsIivpi4vU7zfoB does not exist in this table"}}
