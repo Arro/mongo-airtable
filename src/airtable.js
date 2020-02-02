@@ -55,7 +55,7 @@ export async function pushChangedTable({ auth_key, base_name, primary, database 
 
   const base = airtable.base(base_name)
 
-  let unsuccessful = []
+  let unsuccessful_modifies = []
 
   for (const record of data.modified) {
     try {
@@ -66,59 +66,51 @@ export async function pushChangedTable({ auth_key, base_name, primary, database 
         }
       }])
     } catch(e) {
-      unsuccessful.push(record)
+      unsuccessful_modifies.push(record)
     }
   }
+  data.modified = unsuccessful_modifies
 
-  data.modified = unsuccessful
+
+  let unsuccessful_creates = []
+  for (const record of data.recent) {
+    try {
+      await base(primary).create([{
+        fields: {
+          ...record
+        }
+      }])
+    } catch(e) {
+      unsuccessful_creates.push(record)
+    }
+  }
+  data.recent = unsuccessful_creates
+
+
+  let unsuccessful_deletes = []
+  for (const record of data.deleted) {
+    try {
+      await base(primary).destroy([ record.__id ])
+    } catch(e) {
+      unsuccessful_deletes.push(record)
+    }
+  }
+  data.deleted = unsuccessful_deletes
 
   const records_as_json_string = JSON.stringify(data, null, 2)
   return await writeFile(filename, records_as_json_string, `utf-8`)
 }
 
-/*
 export async function pushChanged(config) {
   for (const table of config.sync) {
-    await pushChangedTable(config.auth.airtable, table)
-  }
-}
-*/
+    const { base_name, primary, database } = table
 
-
-/*
-async function createNewRecordsInTable(table_to_sync) {
-  const base = airtable.base(table_to_sync.airtable_base)
-  const filename = path.resolve(`${__dirname}/${table_to_sync.airtable_table}_new.json`)
-
-  let data
-  try {
-    data = await readFile(filename)
-  } catch {
-    return
-  }
-
-  data = JSON.parse(data)
-
-  const unflatten = table_to_sync.unflatten || []
-  const records = data.map((record) => {
-    unflatten.forEach((f) => {
-      record[f] = [record[f]]
+    await pushChangedTable({
+      auth_key: config.auth.airtable,
+      base_name,
+      primary,
+      database
     })
-    return record
-  })
-
-  for (const record of records) {
-    await base(table_to_sync.airtable_table).create(record)
-  }
-
-  const records_as_json_string = JSON.stringify([], null, 4)
-  return await writeFile(filename, records_as_json_string, `utf-8`)
-}
-
-export async function createNew() {
-  for (const table of sync) {
-    await createNewRecordsInTable(table)
   }
 }
-*/
 

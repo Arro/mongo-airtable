@@ -3,7 +3,7 @@ import nock from 'nock'
 
 import headers from './fixtures/headers'
 
-import { initialPull, pullTable, pushChangedTable } from '../src/airtable'
+import { initialPull, pullTable, pushChangedTable, pushChanged } from '../src/airtable'
 
 import path from 'path'
 import util from 'util'
@@ -25,7 +25,7 @@ test.beforeEach(async(t) => {
     s1: 'airtable-original/002_sports.json',
     s2: 'airtable-transformed/004_sports.json',
     s3: 'airtable-transformed/005_sports.json',
-    f3: 'airtable-transformed/003_furniture_diff.json',
+    f6: 'airtable-transformed/006_furniture_diff_with_errors.json',
     config: 'config-yaml/002_sports.yaml'
   }
   let fixture_texts = {}
@@ -96,11 +96,13 @@ test.serial("run pull table directly", async(t) => {
 })
 
 test.serial("push changed table", async(t) => {
-  const { fixture_texts, output_dirname } = t.context
-  const { f3 } = fixture_texts
+  const { fixture_texts, fixtures, output_dirname } = t.context
+  const { f6: f6_text } = fixture_texts
+  const { f6 } = fixtures
+
 
   const diff_filename =  path.resolve(`${output_dirname}/Furniture_diff.json`)
-  await writeFile(diff_filename, f3, 'utf-8')
+  await writeFile(diff_filename, f6_text, 'utf-8')
 
   nock('https://api.airtable.com:443', { encodedQueryParams: true})
     .patch('/v0/app_fake_2/Furniture/', {
@@ -127,18 +129,105 @@ test.serial("push changed table", async(t) => {
     }, headers)
   ;
 
-  await pushChangedTable({
-    auth_key: 'key1',
-    base_name: "app_fake_2",
-    primary: "Furniture",
-    database: "test_a",
+  nock('https://api.airtable.com:443', { encodedQueryParams: true})
+    .patch('/v0/app_fake_2/Furniture/', {
+      records: [{
+        id: "recFurn4",
+        fields: {
+          Material: "Gas"
+        }
+      }]
+    })
+    .query({})
+    .reply(422, {
+      error: {
+        type: "ROW_DOES_NOT_EXIST",
+        message: "Record ID recFurn4 does not exist in this table"
+      }
+    }, headers)
+  ;
+
+
+  nock('https://api.airtable.com:443', { encodedQueryParams: true})
+    .delete('/v0/app_fake_2/Furniture')
+    .query({"records%5B%5D":"recFurn2"})
+    .reply(200, {
+      records: [{
+        deleted: true,
+        id: "recFurn2"
+      }]
+    }, headers)
+  ;
+
+  nock('https://api.airtable.com:443', { encodedQueryParams: true})
+    .delete('/v0/app_fake_2/Furniture')
+    .query({"records%5B%5D":"recFurn4"})
+    .reply(404, {
+      error: {
+        type: "NOT_FOUND",
+        message: "Could not find a record with ID \"recFurn4\"."
+      }
+    }, headers)
+  ;
+
+  nock('https://api.airtable.com:443', { encodedQueryParams: true})
+    .post('/v0/app_fake_2/Furniture/', {
+      records: [{
+        fields: {
+          Id: "furn-003",
+          Name: "Jill's chair",
+          Type: "Chair",
+          Material: "Wood"
+        }
+      }]
+    })
+    .query({})
+    .reply(200, {
+      records: [{
+        id: "recFurn4",
+        fields: {
+          Id: "furn-003",
+          Name: "Jill's chair",
+          Type: "Chair",
+          Material: "Wood"
+        }
+      }]
+    }, headers)
+  ;
+
+  nock('https://api.airtable.com:443', { encodedQueryParams: true})
+    .post('/v0/app_fake_2/Furniture/', {
+      records: [{
+        fields: {
+          Nonexistent: "Thing",
+        }
+      }]
+    })
+    .query({})
+    .reply(422, {
+      error: {
+        type: "UNKNOWN_FIELD_NAME",
+        message: "Unknown field name: \"Nonexistent\""
+      }
+    }, headers)
+  ;
+
+  await pushChanged({
+    auth: {
+      airtable: "key1"
+    },
+    sync: [{
+      base_name: "app_fake_2",
+      primary: "Furniture",
+      database: "test_a",
+    }]
   })
 
   let output_data = await readFile(diff_filename, 'utf-8')
   output_data = JSON.parse(output_data)
 
-  t.deepEqual([], output_data.modified)
-
+  t.deepEqual([f6.recent[1]], output_data.recent)
+  t.deepEqual([f6.modified[1]], output_data.modified)
+  t.deepEqual([f6.deleted[1]], output_data.deleted)
 })
 
-  //.reply(422, {"error":{"type":"ROW_DOES_NOT_EXIST","message":"Record ID recsIivpi4vU7zfoB does not exist in this table"}}

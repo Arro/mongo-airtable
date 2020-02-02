@@ -1,0 +1,45 @@
+{
+    "modified": [
+        {
+            "__id": "recFurn0",
+            "modified_fields": {
+                "Material": "Wool"
+            }
+        },
+        {
+            "__id": "recFurn4",
+            "modified_fields": {
+                "Material": "Gas"
+            }
+        }
+    ],
+    "deleted": [
+        {
+            "__id": "recFurn2",
+            "Id": "furn-002",
+            "Name": "Jill's house plant",
+            "Owner": "Jill",
+            "Type": "Plant",
+            "Material": "Biological"
+        },
+        {
+            "__id": "recFurn4",
+            "Id": "furn-004",
+            "Name": "Nonexistent item",
+            "Owner": "No one",
+            "Type": "Item",
+            "Material": "Antimatter"
+        }
+    ],
+    "recent": [
+        {
+            "Id": "furn-003",
+            "Name": "Jill's chair",
+            "Type": "Chair",
+            "Material": "Wood"
+        },
+        {
+            "Nonexistent": "Thing"
+        }
+    ]
+}
