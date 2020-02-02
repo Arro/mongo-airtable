@@ -3,7 +3,7 @@ import nock from 'nock'
 
 import headers from './fixtures/headers'
 
-import { initialPull, pullTable, pushChangedTable, pushChanged } from '../src/airtable'
+import { initialPull, pullTable, pushChanged } from '../src/airtable'
 
 import path from 'path'
 import util from 'util'
@@ -104,7 +104,7 @@ test.serial("push changed table", async(t) => {
   const diff_filename =  path.resolve(`${output_dirname}/Furniture_diff.json`)
   await writeFile(diff_filename, f6_text, 'utf-8')
 
-  nock('https://api.airtable.com:443', { encodedQueryParams: true})
+  nock('https://api.airtable.com:443', { encodedQueryParams: true })
     .patch('/v0/app_fake_2/Furniture/', {
       records: [{
         id: "recFurn0",
@@ -129,7 +129,7 @@ test.serial("push changed table", async(t) => {
     }, headers)
   ;
 
-  nock('https://api.airtable.com:443', { encodedQueryParams: true})
+  nock('https://api.airtable.com:443', { encodedQueryParams: true })
     .patch('/v0/app_fake_2/Furniture/', {
       records: [{
         id: "recFurn4",
@@ -148,7 +148,7 @@ test.serial("push changed table", async(t) => {
   ;
 
 
-  nock('https://api.airtable.com:443', { encodedQueryParams: true})
+  nock('https://api.airtable.com:443', { encodedQueryParams: true })
     .delete('/v0/app_fake_2/Furniture')
     .query({"records%5B%5D":"recFurn2"})
     .reply(200, {
@@ -159,7 +159,7 @@ test.serial("push changed table", async(t) => {
     }, headers)
   ;
 
-  nock('https://api.airtable.com:443', { encodedQueryParams: true})
+  nock('https://api.airtable.com:443', { encodedQueryParams: true })
     .delete('/v0/app_fake_2/Furniture')
     .query({"records%5B%5D":"recFurn4"})
     .reply(404, {
@@ -195,7 +195,7 @@ test.serial("push changed table", async(t) => {
     }, headers)
   ;
 
-  nock('https://api.airtable.com:443', { encodedQueryParams: true})
+  nock('https://api.airtable.com:443', { encodedQueryParams: true })
     .post('/v0/app_fake_2/Furniture/', {
       records: [{
         fields: {
