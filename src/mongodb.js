@@ -78,7 +78,7 @@ export async function lookForChanges(config) {
       }
 
       modified.push({
-        id: airtable_record.__id,
+        __id: airtable_record.__id,
         modified_fields
       })
       

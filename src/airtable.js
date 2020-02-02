@@ -60,7 +60,7 @@ export async function pushChangedTable({ auth_key, base_name, primary, database 
   for (const record of data.modified) {
     try {
       await base(primary).update([{
-        id: record.id,
+        id: record.__id,
         fields: {
           ...record.modified_fields
         }

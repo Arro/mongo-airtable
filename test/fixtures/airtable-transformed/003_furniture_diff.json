@@ -1,7 +1,7 @@
 {
     "modified": [
         {
-            "id": "recFurn0",
+            "__id": "recFurn0",
             "modified_fields": {
                 "Material": "Wool"
             }
