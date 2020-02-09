@@ -1,6 +1,6 @@
 {
   "name": "mongo-airtable",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Keep Airtable tables synced with local MongoDB collections",
   "author": "Phil Deschaine",
   "license": "MIT",
@@ -11,6 +11,10 @@
     "mongodb": "^3.4.1",
     "npm-run-all": "^4.1.5",
     "yaml": "^1.7.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Arro/mongo-airtable.git"
   },
   "devDependencies": {
     "@ava/babel": "^0.7.0",
