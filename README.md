@@ -41,11 +41,12 @@ When you want to pull from airtable down to your mongodb collection, run:
 
     npm run pull
 
-###TODO: 
+### TODO: 
 
 - [ ] document how to push
 - [ ] make this tool use the "modified date" on airtable records 
 - [ ] make this tool use the "modified date" of mongo records
+- [ ] configuration via airtable 
 - [ ] progress bars 
 - [ ] confirmation dialogues for conflicts 
 - [ ] 100% test coverage after the above are complete

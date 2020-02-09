@@ -1,6 +1,6 @@
 {
   "name": "mongo-airtable",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Keep Airtable tables synced with local MongoDB collections",
   "author": "Phil Deschaine",
   "license": "MIT",
