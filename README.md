@@ -40,6 +40,17 @@ Run the tests by doing `npm test`.  This is important, as it acts as diagnostics
 When you want to pull from airtable down to your mongodb collection, run: 
 
     npm run pull
+    
+When you want to push any changes to your airtables, run:
+
+    npm run push
+
+
+For **right now** (this will be fixed soon), after doing a push, you should afterward do a pull:
+
+    npm run pull
+
+
 
 ### TODO: 
 
