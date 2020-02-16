@@ -104,6 +104,7 @@ export async function pushChangedTable({ auth_key, base_name, primary, database 
 export async function pushChanged(config) {
   for (const table of config.sync) {
     const { base_name, primary, database } = table
+    console.log(primary)
 
     await pushChangedTable({
       auth_key: config.auth.airtable,
