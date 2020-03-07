@@ -54,7 +54,6 @@ For **right now** (this will be fixed soon), after doing a push, you should afte
 
 ### TODO: 
 
-- [ ] document how to push
 - [ ] make this tool use the "modified date" on airtable records 
 - [ ] make this tool use the "modified date" of mongo records
 - [ ] configuration via airtable 

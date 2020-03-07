@@ -8,6 +8,7 @@
     "airtable": "^0.8.1",
     "airtable-json": "^1.2.6",
     "deep-equal": "^2.0.1",
+    "moment": "^2.24.0",
     "mongodb": "^3.4.1",
     "npm-run-all": "^4.1.5",
     "yaml": "^1.7.2"
@@ -89,7 +90,9 @@
     "transpile": "npx babel src --out-dir build",
     "_pull": "node ./build/run/pull.js",
     "_push": "node ./build/run/push.js",
+    "_update": "node ./build/run/update.js",
     "pull": "npm-run-all -s transpile _pull",
-    "push": "npm-run-all -s transpile _push"
+    "push": "npm-run-all -s transpile _push",
+    "update": "npm-run-all -s transpile _update"
   }
 }

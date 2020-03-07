@@ -43,6 +43,9 @@ export async function initialPull(config) {
       auth_key: config.auth.airtable
     })
   }
+
+  const last_pulled_filename = path.resolve(`${__dirname}/../build/last-pulled.txt`)
+  return await writeFile(last_pulled_filename, `${+new Date()}`, `utf-8`)
 }
 
 export async function pushChangedTable({ auth_key, base_name, primary, database }) {
