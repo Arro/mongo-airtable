@@ -1,6 +1,7 @@
 import path from 'path'
 import airtable from 'airtable'
 import airtableJson from 'airtable-json'
+import moment from 'moment'
 
 import util from 'util'
 import fs from 'fs'
@@ -45,7 +46,7 @@ export async function initialPull(config) {
   }
 
   const last_pulled_filename = path.resolve(`${__dirname}/../build/last-pulled.txt`)
-  return await writeFile(last_pulled_filename, `${+new Date()}`, `utf-8`)
+  return await writeFile(last_pulled_filename, moment().format('ddd MMM D YYYY h:mm A'), 'utf-8')
 }
 
 export async function pushChangedTable({ auth_key, base_name, primary, database }) {
