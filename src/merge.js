@@ -73,6 +73,12 @@ async function seeWhatChangedInAirtable({ auth_key, table, last_pulled }) {
       modified_fields[field] = airtable_record[field]
     }
 
+    for (const field in original_record) {
+      if (airtable_record[field] === undefined) {
+        modified_fields[field] = null
+      }
+    }
+
     modified.push({
       __id: airtable_record.__id,
       ...modified_fields
@@ -136,7 +142,7 @@ async function threeWayMerge({ table }) {
       mongo: found
     })
 
-    // need to remove from mongo modified here, because it's not safe to update to mongo in that case
+    //  need to remove from mongo modified here, because it's not safe to update to mongo in that case
     mongo_modified.splice(found_index, 1)
   }
 
@@ -154,6 +160,8 @@ async function threeWayMerge({ table }) {
   const mongo_ok_string = JSON.stringify(mongo_modified, null, 2)
   const mongo_ok_filename = path.resolve(`${__dirname}/../build/${database}/${primary}_mongo_ok.json`)
   await writeFile(mongo_ok_filename, mongo_ok_string, `utf-8`)
+
+  await writeFile(changed_in_airtable_filename, "{}", `utf-8`)
 }
 
 
@@ -166,13 +174,21 @@ async function updateOKAirtable({ table }) {
   collection = db.collection(collection)
 
   const ok_filename = path.resolve(`${__dirname}/../build/${database}/${primary}_airtable_ok.json`)
-  console.log(ok_filename)
   let ok_airtable_updates = await readFile(ok_filename, `utf-8`)
   console.log(ok_airtable_updates)
   ok_airtable_updates = JSON.parse(ok_airtable_updates)
 
   for (let update of ok_airtable_updates) {
-    await collection.updateOne({ __id: update.__id}, { $set: { ...update }}, { upsert: true })
+    console.log(`update`)
+    console.log(update)
+    for (const field in update) {
+      if (field === "__id") { continue }
+      if (update[field] === null) {
+        await collection.updateOne({ __id: update.__id}, { $unset: { [field]: "" }})
+      } else {
+        await collection.updateOne({ __id: update.__id}, { $set: { [field]: update[field] }}, { upsert: true })
+      }
+    }
   }
 
   let all_records = await collection.find({}).toArray()
@@ -184,6 +200,8 @@ async function updateOKAirtable({ table }) {
   const output_filename = path.resolve(`${__dirname}/../build/${database}/${primary}.json`)
   const output_string = JSON.stringify(all_records, null, 2)
   await writeFile(output_filename, output_string, `utf-8`)
+
+  await writeFile(ok_filename, "[]", `utf-8`)
 
   await connection.close()
 }
