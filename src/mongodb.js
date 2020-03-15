@@ -77,6 +77,12 @@ export async function lookForChanges(config) {
         modified_fields[field] = mongo_record[field]
       }
 
+      for (const field in airtable_record) {
+        if (mongo_record[field] === undefined) {
+          modified_fields[field] = null
+        }
+      }
+
       modified.push({
         __id: airtable_record.__id,
         modified_fields
