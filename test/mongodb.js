@@ -6,7 +6,8 @@ import mkdirp from 'mkdirp'
 import rimraf from 'rimraf'
 import yaml from 'yaml'
 
-import { putIntoDB, initialInsert, lookForChanges } from '../src/mongodb'
+import { putIntoDB, initialInsert } from '../src/mongodb'
+import { lookForChangesInMongoAll } from '../src/look-for-changes-in-mongo'
 
 import { MongoClient } from 'mongodb'
 const url = `mongodb://localhost:27017`
@@ -112,7 +113,7 @@ test.serial("can check for new ones", async(t) => {
   const collection = db.collection("furniture")
   await collection.insertMany(fixtures.f2)
 
-  await lookForChanges(fixtures.config2)
+  await lookForChangesInMongoAll(fixtures.config2)
 
   const diff_filename = path.resolve(`${output_dirname}/Furniture_diff.json`)
   const diff_text = await readFile(diff_filename, 'utf-8')

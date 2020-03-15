@@ -3,7 +3,8 @@ import nock from 'nock'
 
 import headers from './fixtures/headers'
 
-import { initialPull, pullTable, pushChanged } from '../src/airtable'
+import { initialPull, pullTable } from '../src/airtable'
+import { updateOKRecordsToAirtableAll } from '../src/update-ok-records-to-airtable'
 
 import path from 'path'
 import util from 'util'
@@ -212,7 +213,7 @@ test.serial("push changed table", async(t) => {
     }, headers)
   ;
 
-  await pushChanged({
+  await updateOKRecordsToAirtableAll({
     auth: {
       airtable: "key1"
     },

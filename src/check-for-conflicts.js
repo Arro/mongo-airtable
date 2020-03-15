@@ -50,6 +50,7 @@ export async function checkForConflicts({ table }) {
     })
 
     //  need to remove from mongo modified here, because it's not safe to update to mongo in that case
+    //  TODO modify _diff file instead
     mongo_modified.splice(found_index, 1)
   }
 
