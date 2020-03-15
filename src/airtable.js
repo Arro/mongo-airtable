@@ -33,7 +33,7 @@ export async function pullTable({ auth_key,  base_name, primary, view, database,
   const records_as_json_string = JSON.stringify(records, null, 2)
   await writeFile(json_filename, records_as_json_string, `utf-8`)
 
-  for (const t of [ "airtable_ok", "mongo_ok", "diff" ]) {
+  for (const t of [ "airtable_ok", "diff" ]) {
     const filename = path.resolve(`${__dirname}/../build/${database}/${primary}_${t}.json`)
     await writeFile(filename, "[]", `utf-8`)
   }

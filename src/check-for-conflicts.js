@@ -50,7 +50,6 @@ export async function checkForConflicts({ table }) {
     })
 
     //  need to remove from mongo modified here, because it's not safe to update to mongo in that case
-    //  TODO modify _diff file instead
     mongo_modified.splice(found_index, 1)
   }
 
@@ -65,9 +64,10 @@ export async function checkForConflicts({ table }) {
   const airtable_ok_filename = path.resolve(`${__dirname}/../build/${database}/${primary}_airtable_ok.json`)
   await writeFile(airtable_ok_filename, airtable_ok_string, `utf-8`)
 
-  const mongo_ok_string = JSON.stringify(mongo_modified, null, 2)
-  const mongo_ok_filename = path.resolve(`${__dirname}/../build/${database}/${primary}_mongo_ok.json`)
-  await writeFile(mongo_ok_filename, mongo_ok_string, `utf-8`)
+  // overwrite diff file
+  diff.modified = mongo_modified
+  const diff_string = JSON.stringify(diff, null, 2)
+  await writeFile(diff_filename, diff_string, `utf-8`)
 
   await writeFile(changed_in_airtable_filename, "{}", `utf-8`)
 }
