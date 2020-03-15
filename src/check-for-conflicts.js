@@ -21,10 +21,15 @@ export async function checkForConflicts({ table }) {
   let airtable_ok_to_update = []
 
   for (const a of airtable_modified) {
+    console.log(`\n---`)
+    console.log(`a`)
+    console.log(a)
     const found_index = _.findIndex(mongo_modified, (m) => {
       return m.__id === a.__id
     })
     const found = mongo_modified[found_index]
+    console.log(`found`)
+    console.log(found)
 
     if (found_index === -1) {
       airtable_ok_to_update.push(a)
@@ -33,8 +38,19 @@ export async function checkForConflicts({ table }) {
 
     // if they modify different fields, no need for collision
     let has_conflict = false
-    for (const a_field in a.modified) {
-      if (found.modified[a_field] && (a.modified[a_field] !== found.modified[a_field])) {
+    for (const a_field in a) {
+      if (a_field === "__id") { continue }
+
+      const a_val = a[a_field]
+      const f_val = found.modified_fields[a_field]
+
+      console.log(`a_field`)
+      console.log(a_field)
+      console.log(`a_val`)
+      console.log(a_val)
+      console.log(`f_val`)
+      console.log(f_val)
+      if (f_val && (a_val !== f_val)) {
         has_conflict = true
       }
     }
