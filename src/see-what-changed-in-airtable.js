@@ -57,7 +57,7 @@ export async function seeWhatChangedInAirtable({ auth_key, table, last_pulled })
 
     modified.push({
       __id: airtable_record.__id,
-      ...modified_fields
+      modified_fields
     })
   }
 

@@ -38,10 +38,9 @@ export async function checkForConflicts({ table }) {
 
     // if they modify different fields, no need for collision
     let has_conflict = false
-    for (const a_field in a) {
-      if (a_field === "__id") { continue }
+    for (const a_field in a.modified_fields) {
 
-      const a_val = a[a_field]
+      const a_val = a.modified_fields[a_field]
       const f_val = found.modified_fields[a_field]
 
       console.log(`a_field`)
