@@ -4,6 +4,8 @@ const { readFile, writeFile } = fs.promises
 import { MongoClient } from 'mongodb'
 
 export async function updateOKRecordsToMongo({ table }) {
+  console.log("\n--> update ok records to mongo")
+
   const { database, primary } = table
   let { collection } = table
   const client = new MongoClient(`mongodb://localhost:27017`, { useUnifiedTopology: true })
@@ -15,6 +17,7 @@ export async function updateOKRecordsToMongo({ table }) {
   let ok_airtable_updates = await readFile(ok_filename, `utf-8`)
   ok_airtable_updates = JSON.parse(ok_airtable_updates)
 
+  console.log(`---> updating ${ok_airtable_updates.length} records in mongo`)
   for (let update of ok_airtable_updates) {
     for (const field in update) {
       if (field === "__id") { continue }

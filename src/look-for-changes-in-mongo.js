@@ -14,6 +14,7 @@ export async function lookForChangesInMongoAll(config) {
 }
 
 export async function lookForChangesInMongo({ primary, database, collection, flatten }) {
+  console.log("\n--> look for changes in mongo")
   const client = new MongoClient(url, { useUnifiedTopology: true })
   const connection = await client.connect()
   const db = connection.db(database)
@@ -70,6 +71,10 @@ export async function lookForChangesInMongo({ primary, database, collection, fla
       delete record[d]
     }
   }
+
+  console.log(`---> ${modified.length} modifed found`)
+  console.log(`---> ${deleted.length} deleted found`)
+  console.log(`---> ${recent.length} recent found`)
 
   const json_string = JSON.stringify({ modified, deleted, recent }, null, 4)
   const json_filename = path.resolve(`${__dirname}/../build/${database}/${primary}_diff.json`)

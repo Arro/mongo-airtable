@@ -4,7 +4,7 @@ const { readFile, writeFile } = fs.promises
 import _ from 'lodash'
 
 export async function checkForConflicts({ table }) {
-
+  console.log("\n--> check for conflicts")
   const { database, primary } = table
 
   const changed_in_airtable_filename = path.resolve(`${__dirname}/../build/${database}/${primary}_changed_in_airtable.json`)
@@ -21,15 +21,10 @@ export async function checkForConflicts({ table }) {
   let airtable_ok_to_update = []
 
   for (const a of airtable_modified) {
-    console.log(`\n---`)
-    console.log(`a`)
-    console.log(a)
     const found_index = _.findIndex(mongo_modified, (m) => {
       return m.__id === a.__id
     })
     const found = mongo_modified[found_index]
-    console.log(`found`)
-    console.log(found)
 
     if (found_index === -1) {
       airtable_ok_to_update.push(a)
@@ -43,12 +38,6 @@ export async function checkForConflicts({ table }) {
       const a_val = a.modified_fields[a_field]
       const f_val = found.modified_fields[a_field]
 
-      console.log(`a_field`)
-      console.log(a_field)
-      console.log(`a_val`)
-      console.log(a_val)
-      console.log(`f_val`)
-      console.log(f_val)
       if (f_val && (a_val !== f_val)) {
         has_conflict = true
       }
@@ -68,8 +57,8 @@ export async function checkForConflicts({ table }) {
     mongo_modified.splice(found_index, 1)
   }
 
-  console.log(`there were ${collisions.length} collisions`)
-  console.log(`there were ${airtable_ok_to_update.length} non-collisions`)
+  console.log(`---> there were ${collisions.length} collisions`)
+  console.log(`---> there were ${airtable_ok_to_update.length} non-collisions`)
 
   const collisions_string = JSON.stringify(collisions, null, 2)
   const collisions_filename = path.resolve(`${__dirname}/../build/${database}/${primary}_collisions.json`)

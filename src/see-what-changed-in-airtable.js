@@ -7,6 +7,7 @@ import deepEqual from 'deep-equal'
 const { readFile, writeFile } = fs.promises
 
 export async function seeWhatChangedInAirtable({ auth_key, table, last_pulled }) {
+  console.log("\n--> see what changed in airtable")
   const { base_name, primary, view, populate, database } = table
   
   const filter =
@@ -60,6 +61,9 @@ export async function seeWhatChangedInAirtable({ auth_key, table, last_pulled })
       modified_fields
     })
   }
+
+  console.log(`---> ${modified.length} modifed found`)
+  console.log(`---> ${recent.length} recent found`)
 
   const json_string = JSON.stringify({ recent, modified }, null, 2)
   const json_filename = path.resolve(`${__dirname}/../build/${database}/${primary}_changed_in_airtable.json`)

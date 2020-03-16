@@ -21,6 +21,7 @@ export async function updateOKRecordsToAirtableAll(config) {
 
 
 export async function updateOKRecordsToAirtable({ auth_key, base_name, primary, database }) {
+  console.log("\n--> update ok records to airtable")
   airtable.configure({ apiKey: auth_key })
 
   const filename = path.resolve(`${__dirname}/../build/${database}/${primary}_diff.json`)
@@ -32,6 +33,7 @@ export async function updateOKRecordsToAirtable({ auth_key, base_name, primary, 
 
   let unsuccessful_modifies = []
 
+  console.log(`---> updating ${data.modified.length} modified in airtable`)
   for (const record of data.modified) {
     try {
       await base(primary).update([{
@@ -48,6 +50,7 @@ export async function updateOKRecordsToAirtable({ auth_key, base_name, primary, 
 
 
   let unsuccessful_creates = []
+  console.log(`---> creating ${data.recent.length} local-only records to airtable`)
   for (const record of data.recent) {
     try {
       await base(primary).create([{
@@ -71,6 +74,7 @@ export async function updateOKRecordsToAirtable({ auth_key, base_name, primary, 
     }
   }
   data.deleted = unsuccessful_deletes
+  console.log(`---> deleting ${data.deleted.length} locally-deleted records in airtable`)
 
   const records_as_json_string = JSON.stringify(data, null, 2)
   return await writeFile(filename, records_as_json_string, `utf-8`)
