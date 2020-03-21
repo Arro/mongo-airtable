@@ -29,6 +29,14 @@ export async function updateOKRecordsToMongo({ table }) {
     }
   }
 
+  const recent_filename = path.resolve(`${__dirname}/../build/${database}/${primary}_airtable_recent.json`)
+  let recent_airtable_records = await readFile(recent_filename, `utf-8`)
+  recent_airtable_records = JSON.parse(recent_airtable_records)
+  console.log(`---> adding ${recent_airtable_records.length} recent records in mongo`)
+  for (const record of recent_airtable_records) {
+    await collection.insertOne(record)
+  }
+
   let all_records = await collection.find({}).toArray()
   all_records = all_records.map((r) => {
     delete r._id
@@ -40,6 +48,7 @@ export async function updateOKRecordsToMongo({ table }) {
   await writeFile(output_filename, output_string, `utf-8`)
 
   await writeFile(ok_filename, "[]", `utf-8`)
+  await writeFile(recent_filename, "[]", `utf-8`)
 
   await connection.close()
 }

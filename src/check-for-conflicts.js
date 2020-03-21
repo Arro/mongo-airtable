@@ -10,7 +10,7 @@ export async function checkForConflicts({ table }) {
   const changed_in_airtable_filename = path.resolve(`${__dirname}/../build/${database}/${primary}_changed_in_airtable.json`)
   let changed_in_airtable = await readFile(changed_in_airtable_filename, `utf-8`)
   changed_in_airtable = JSON.parse(changed_in_airtable)
-  const { modified: airtable_modified } = changed_in_airtable
+  const { modified: airtable_modified, recent } = changed_in_airtable
 
   const diff_filename = path.resolve(`${__dirname}/../build/${database}/${primary}_diff.json`)
   let diff = await readFile(diff_filename, `utf-8`)
@@ -67,6 +67,11 @@ export async function checkForConflicts({ table }) {
   const airtable_ok_string = JSON.stringify(airtable_ok_to_update, null, 2)
   const airtable_ok_filename = path.resolve(`${__dirname}/../build/${database}/${primary}_airtable_ok.json`)
   await writeFile(airtable_ok_filename, airtable_ok_string, `utf-8`)
+
+  // recent ones guarunteed not to have conflicts
+  const recent_string = JSON.stringify(recent, null, 2)
+  const recent_filename = path.resolve(`${__dirname}/../build/${database}/${primary}_airtable_recent.json`)
+  await writeFile(recent_filename, recent_string, `utf-8`)
 
   // overwrite diff file
   diff.modified = mongo_modified
