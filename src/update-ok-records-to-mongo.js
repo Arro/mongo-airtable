@@ -19,7 +19,7 @@ export async function updateOKRecordsToMongo({ table }) {
 
   console.log(`---> updating ${ok_airtable_updates.length} records in mongo`)
   for (let update of ok_airtable_updates) {
-    for (const field in update) {
+    for (const field in update.modified_fields) {
       if (field === "__id") { continue }
       if (update[field] === null) {
         await collection.updateOne({ __id: update.__id}, { $unset: { [field]: "" }})
