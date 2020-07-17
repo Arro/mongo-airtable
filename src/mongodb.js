@@ -1,10 +1,13 @@
 import path from 'path'
 import { MongoClient } from 'mongodb'
 import fs from 'fs'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const { readFile } = fs.promises
 
-const url = `mongodb://localhost:27017`
+const url = process.env.MONGO_URL
 
 export async function putIntoDB({ primary, collection, database }) {
   const client = new MongoClient(url, { useUnifiedTopology: true })

@@ -17,7 +17,7 @@ Install MongoDB using `brew install mongodb` or similar.
 
 Let's say you wanted your mongodb database to be called "main" and your collection (which maps to a table in Airtable) to be called "songs".  The Airtable view is called "Main View".
 
-Clone this repo, and then create a file called `~/.mongo-airtable.yaml`.  Make it look like the following.
+Clone this repo, and then create a file called `.mongo-airtable.yaml`.  Make it look like the following.
 
     auth:
       airtable: <your airtable api key (starts with 'key')>
@@ -32,6 +32,11 @@ Clone this repo, and then create a file called `~/.mongo-airtable.yaml`.  Make i
         view: <your airtable view name (e.g. 'Main View')>
         database: <another mongo db name (e.g. 'main')>
         collection: <another mongo db collection name (e.g. 'songs')>
+
+Create a file called `.env`.  Make it look like the following.
+        
+      MONGO_URL=mongodb://localhost:27017/my_db
+      PATH_MONGO_AIRTABLE_YAML=path/to/.mongo-airtable.yaml
 
 Run `npm install` (or `yarn install`).  Now you're mostly ready to go.
 
