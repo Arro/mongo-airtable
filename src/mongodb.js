@@ -22,7 +22,8 @@ export async function putIntoDB({ primary, collection, database }) {
 
   await collection.removeMany({})
 
-  await collection.insertMany(data)
+  if(data.length > 0)
+    await collection.insertMany(data)
 
   await connection.close()
 }
