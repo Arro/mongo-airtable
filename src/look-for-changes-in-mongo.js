@@ -2,8 +2,12 @@ import fs from 'fs'
 import path from 'path'
 import deepEqual from 'deep-equal'
 import { MongoClient } from 'mongodb'
+import dotenv from 'dotenv'
 
-const url = `mongodb://localhost:27017`
+dotenv.config()
+
+const url = process.env.MONGO_URL
+
 
 const { readFile, writeFile } = fs.promises
 
@@ -60,7 +64,7 @@ export async function lookForChangesInMongo({ primary, database, collection, fla
       __id: original_record.__id,
       modified_fields
     })
-    
+
   }
 
   let recent = await collection.find({ __id: { $exists: false } }).toArray()

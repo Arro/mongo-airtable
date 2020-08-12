@@ -2,13 +2,16 @@ import fs from 'fs'
 import path from 'path'
 const { readFile, writeFile } = fs.promises
 import { MongoClient } from 'mongodb'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 export async function updateOKRecordsToMongo({ table }) {
   console.log("\n--> update ok records to mongo")
 
   const { database, primary } = table
   let { collection } = table
-  const client = new MongoClient(`mongodb://localhost:27017`, { useUnifiedTopology: true })
+  const client = new MongoClient(process.env.MONGO_URL, { useUnifiedTopology: true })
   const connection = await client.connect()
   const db = connection.db(database)
   collection = db.collection(collection)
