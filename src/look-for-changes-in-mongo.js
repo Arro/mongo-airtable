@@ -13,7 +13,7 @@ export async function lookForChangesInMongoAll(config) {
   }
 }
 
-export async function lookForChangesInMongo({ primary, database, collection, flatten }) {
+export async function lookForChangesInMongo({ primary, database, collection, flatten = [] }) {
   console.log("\n--> look for changes in mongo")
   const client = new MongoClient(url, { useUnifiedTopology: true })
   const connection = await client.connect()
@@ -60,7 +60,7 @@ export async function lookForChangesInMongo({ primary, database, collection, fla
       __id: original_record.__id,
       modified_fields
     })
-    
+
   }
 
   let recent = await collection.find({ __id: { $exists: false } }).toArray()
