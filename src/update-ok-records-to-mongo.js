@@ -27,7 +27,7 @@ export async function updateOKRecordsToMongo({ table }) {
       if (update[field] === null) {
         await collection.updateOne({ __id: update.__id}, { $unset: { [field]: "" }})
       } else {
-        await collection.updateOne({ __id: update.__id}, { $set: { [field]: update[field] }}, { upsert: true })
+        await collection.updateOne({ __id: update.__id}, { $set: { [field]: update.modified_fields[field] }}, { upsert: true })
       }
     }
   }
