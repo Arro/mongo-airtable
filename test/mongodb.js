@@ -10,7 +10,11 @@ import { putIntoDB, initialInsert } from '../src/mongodb'
 import { lookForChangesInMongoAll } from '../src/look-for-changes-in-mongo'
 
 import { MongoClient } from 'mongodb'
-const url = `mongodb://localhost:27017`
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+const url = process.env.MONGO_URL
 
 const readFile = util.promisify(fs.readFile)
 const writeFile = util.promisify(fs.writeFile)
@@ -46,7 +50,7 @@ test.beforeEach(async(t) => {
     if (filepath.endsWith('json')) fixtures[name] = JSON.parse(fixture_texts[name])
     if (filepath.endsWith('yaml')) fixtures[name] = yaml.parse(fixture_texts[name])
   }
-  
+
   t.context = {
     db,
     connection,
