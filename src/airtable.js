@@ -1,13 +1,22 @@
-import path from 'path'
-import airtableJson from 'airtable-json'
-import moment from 'moment'
+import path from "path"
+import airtableJson from "airtable-json"
+import moment from "moment"
 
-import fs from 'fs'
-import mkdirp from 'mkdirp'
+import fs from "fs"
+import mkdirp from "mkdirp"
 
 const { writeFile } = fs.promises
 
-export async function pullTable({ auth_key,  base_name, primary, view, database, filter, populate=[], flatten=[] }) {
+export async function pullTable({
+  auth_key,
+  base_name,
+  primary,
+  view,
+  database,
+  filter,
+  populate = [],
+  flatten = []
+}) {
   console.log(`starting sync of ${primary}`)
 
   let records = await airtableJson({
@@ -18,6 +27,7 @@ export async function pullTable({ auth_key,  base_name, primary, view, database,
     filter,
     populate
   })
+  console.log(`found ${records.length} records`)
 
   records = records.map((record) => {
     flatten.forEach((f) => {
@@ -33,12 +43,16 @@ export async function pullTable({ auth_key,  base_name, primary, view, database,
   const records_as_json_string = JSON.stringify(records, null, 2)
   await writeFile(json_filename, records_as_json_string, `utf-8`)
 
-  for (const t of [ "airtable_ok", "diff" ]) {
-    const filename = path.resolve(`${__dirname}/../build/${database}/${primary}_${t}.json`)
+  for (const t of ["airtable_ok", "diff"]) {
+    const filename = path.resolve(
+      `${__dirname}/../build/${database}/${primary}_${t}.json`
+    )
     await writeFile(filename, "[]", `utf-8`)
   }
-  for (const t of [ "collisions" ]) {
-    const filename = path.resolve(`${__dirname}/../build/${database}/${primary}_${t}.json`)
+  for (const t of ["collisions"]) {
+    const filename = path.resolve(
+      `${__dirname}/../build/${database}/${primary}_${t}.json`
+    )
     await writeFile(filename, "[]", `utf-8`)
   }
 }
@@ -51,8 +65,12 @@ export async function initialPull(config) {
     })
   }
 
-  const last_pulled_filename = path.resolve(`${__dirname}/../build/last-pulled.txt`)
-  return await writeFile(last_pulled_filename, moment().format('ddd MMM D YYYY h:mm A ZZ'), 'utf-8')
+  const last_pulled_filename = path.resolve(
+    `${__dirname}/../build/last-pulled.txt`
+  )
+  return await writeFile(
+    last_pulled_filename,
+    moment().format("ddd MMM D YYYY h:mm A ZZ"),
+    "utf-8"
+  )
 }
-
-

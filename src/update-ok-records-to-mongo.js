@@ -50,9 +50,6 @@ export async function updateOKRecordsToMongo({ table }) {
   const output_string = JSON.stringify(all_records, null, 2)
   await writeFile(output_filename, output_string, `utf-8`)
 
-  await writeFile(ok_filename, "[]", `utf-8`)
-  await writeFile(recent_filename, "[]", `utf-8`)
-
   await connection.close()
 }
 

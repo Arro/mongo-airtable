@@ -76,7 +76,7 @@ export async function lookForChangesInMongo({ primary, database, collection, fla
     }
   }
 
-  console.log(`---> ${modified.length} modifed found`)
+  console.log(`---> ${modified.length} modified found`)
   console.log(`---> ${deleted.length} deleted found`)
   console.log(`---> ${recent.length} recent found`)
 

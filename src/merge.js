@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import moment from 'moment'
 
+import { resetJsonFiles } from './reset-json-files'
 import { lookForChangesInMongo } from './look-for-changes-in-mongo'
 import { seeWhatChangedInAirtable } from './see-what-changed-in-airtable'
 import { checkForConflicts } from './check-for-conflicts'
@@ -24,6 +25,7 @@ export async function seeWhatChanged(config) {
 
     console.log(`--------------------------\n`)
     console.log(`-> table: ${table.primary}`)
+    await resetJsonFiles(table)
     await lookForChangesInMongo(table)
     await seeWhatChangedInAirtable({ auth_key, table, last_pulled })
     await checkForConflicts({ table })

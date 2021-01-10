@@ -77,6 +77,4 @@ export async function checkForConflicts({ table }) {
   diff.modified = mongo_modified
   const diff_string = JSON.stringify(diff, null, 2)
   await writeFile(diff_filename, diff_string, `utf-8`)
-
-  await writeFile(changed_in_airtable_filename, "{}", `utf-8`)
 }
