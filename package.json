@@ -1,6 +1,6 @@
 {
   "name": "mongo-airtable",
-  "version": "1.2.2",
+  "version": "2.0.0",
   "description": "Keep Airtable tables synced with local MongoDB collections",
   "author": "Phil Deschaine",
   "license": "MIT",
@@ -12,7 +12,6 @@
     "dotenv": "^8.2.0",
     "moment": "^2.29.1",
     "mongodb": "^3.6.3",
-    "npm-run-all": "^4.1.5",
     "yaml": "^1.10.0"
   },
   "repository": {
@@ -23,16 +22,12 @@
     "@ava/babel": "^1.0.1",
     "@babel/cli": "^7.12.10",
     "@babel/core": "^7.12.10",
-    "@babel/plugin-transform-runtime": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
-    "@babel/preset-react": "^7.12.10",
     "@babel/runtime": "^7.12.5",
-    "@babel/runtime-corejs3": "^7.12.5",
     "ava": "^3.15.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.17.0",
     "eslint-plugin-babel": "^5.3.1",
-    "esm": "^3.2.25",
     "mkdirp": "^1.0.4",
     "nock": "^13.0.5",
     "nyc": "^15.1.0",
@@ -40,36 +35,14 @@
     "rimraf": "^3.0.2"
   },
   "ava": {
-    "babel": {
-      "testOptions": {
-        "babelrc": false,
-        "configFile": false,
-        "presets": [
-          [
-            "@babel/preset-env",
-            {
-              "useBuiltIns": "entry",
-              "corejs": 3
-            }
-          ]
-        ],
-        "plugins": [
-          [
-            "@babel/plugin-transform-runtime",
-            {
-              "regenerator": true
-            }
-          ]
-        ]
-      }
-    },
+    "babel": true,
     "files": [
       "test/airtable.js",
       "test/mongodb.js"
     ],
     "@comment files": [],
     "require": [
-      "esm"
+      "@babel/register"
     ]
   },
   "nyc": {
@@ -86,11 +59,11 @@
     ]
   },
   "engines": {
-    "node": ">=13.5.0"
+    "node": ">=12.0.0"
   },
   "scripts": {
     "test": "npx nyc ava",
-    "transpile": "npx babel src --out-dir build",
+    "build": "npx babel src --out-dir dist",
     "_pull": "node ./build/run/pull.js",
     "_push": "node ./build/run/push.js",
     "_update": "node ./build/run/update.js",

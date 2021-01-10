@@ -3,3 +3,5 @@ node_modules
 config.yaml
 .nyc_output
 coverage
+dist
+.env
