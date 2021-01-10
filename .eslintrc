@@ -1,25 +1,11 @@
 {
   "env": {
     "node": true,
-    "es6": true
+    "es6": true,
   },
-  "extends": [
-    "eslint:recommended",
-  ],
+  "extends": ["eslint:recommended"],
   "parser": "babel-eslint",
-  "rules": {
-    "no-var": [2],
-    "strict": [2, "never"],
-    "space-before-function-paren": [2, "never"],
-    "operator-linebreak": [2, "after"],
-    "one-var": [2, "never"],
-    "generator-star-spacing": [2, "after"],
-    "max-len": [1, 150, 2],
-    "new-cap": [2, {"capIsNew": false}],
-    "no-trailing-spaces": [2, { "skipBlankLines": true }],
-    "func-names": [2],
-    "no-console": [0],
-    "no-empty": [0]
-  },
+  "parserOptions": {},
+  "rules": {},
   "plugins": ["babel"]
 }
