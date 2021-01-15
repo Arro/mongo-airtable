@@ -1,37 +1,15 @@
 import path from "path"
 import airtable from "airtable"
-import fs from "fs"
+import fs from "fs-extra"
 
-const { readFile, writeFile } = fs.promises
-
-export async function updateOKRecordsToAirtableAll(config) {
-  for (const table of config.sync) {
-    const { base_name, primary, database } = table
-    console.log(primary)
-
-    await updateOKRecordsToAirtable({
-      auth_key: config.auth.airtable,
-      base_name,
-      primary,
-      database
-    })
-  }
-}
-
-export async function updateOKRecordsToAirtable({
-  auth_key,
-  base_name,
-  primary,
-  database
-}) {
+export default async function ({ auth_key, base_name, primary, database }) {
+  const local_save_path = path.resolve(process.env.local_save_path)
   console.log("\n--> update ok records to airtable")
   airtable.configure({ apiKey: auth_key })
 
-  const filename = path.resolve(
-    `${__dirname}/../build/${database}/${primary}_diff.json`
-  )
+  const filename = path.join(local_save_path, database, `${primary}_diff.json`)
 
-  let data = await readFile(filename)
+  let data = await fs.readFile(filename)
   data = JSON.parse(data)
 
   const base = airtable.base(base_name)
@@ -91,5 +69,5 @@ export async function updateOKRecordsToAirtable({
   )
 
   const records_as_json_string = JSON.stringify(data, null, 2)
-  return await writeFile(filename, records_as_json_string, `utf-8`)
+  return await fs.writeFile(filename, records_as_json_string, `utf-8`)
 }

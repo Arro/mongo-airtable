@@ -1,16 +1,30 @@
-import fs from 'fs'
-import path from 'path'
+import fs from "fs-extra"
+import path from "path"
 
-const { writeFile } = fs.promises
+export default async function ({ primary, database }) {
+  const local_save_path = path.resolve(process.env.local_save_path)
 
-export async function resetJsonFiles({ primary, database }) {
+  const ok_filename = path.join(
+    local_save_path,
+    database,
+    `${primary}_airtable_ok.json`
+  )
 
-  const ok_filename = path.resolve(`${__dirname}/../build/${database}/${primary}_airtable_ok.json`)
-  await writeFile(ok_filename, "[]", `utf-8`)
+  await fs.writeFile(ok_filename, "[]", "utf-8")
 
-  const recent_filename = path.resolve(`${__dirname}/../build/${database}/${primary}_airtable_recent.json`)
-  await writeFile(recent_filename, "[]", `utf-8`)
+  const recent_filename = path.join(
+    local_save_path,
+    database,
+    `${primary}_airtable_recent.json`
+  )
 
-  const changed_in_airtable_filename = path.resolve(`${__dirname}/../build/${database}/${primary}_changed_in_airtable.json`)
-  await writeFile(changed_in_airtable_filename, "{}", `utf-8`)
+  await fs.writeFile(recent_filename, "[]", "utf-8")
+
+  const changed_in_airtable_filename = path.join(
+    local_save_path,
+    database,
+    `${primary}_changed_in_airtable.json`
+  )
+
+  await fs.writeFile(changed_in_airtable_filename, "{}", "utf-8")
 }

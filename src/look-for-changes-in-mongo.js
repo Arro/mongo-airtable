@@ -1,33 +1,31 @@
-import fs from 'fs'
-import path from 'path'
-import deepEqual from 'deep-equal'
-import { MongoClient } from 'mongodb'
-import dotenv from 'dotenv'
+import fs from "fs-extra"
+import path from "path"
+import deepEqual from "deep-equal"
+import { MongoClient } from "mongodb"
+import dotenv from "dotenv"
 
 dotenv.config()
 
-const url = process.env.MONGO_URL
+export default async function ({
+  primary,
+  database,
+  collection,
+  flatten = []
+}) {
+  const local_save_path = path.resolve(process.env.local_save_path)
 
-
-const { readFile, writeFile } = fs.promises
-
-export async function lookForChangesInMongoAll(config) {
-  for (const table of config.sync) {
-    await lookForChangesInMongo(table)
-  }
-}
-
-export async function lookForChangesInMongo({ primary, database, collection, flatten = [] }) {
   console.log("\n--> look for changes in mongo")
-  const client = new MongoClient(url, { useUnifiedTopology: true })
+  const client = new MongoClient(process.env.mongo_url, {
+    useUnifiedTopology: true
+  })
   const connection = await client.connect()
   const db = connection.db(database)
   collection = db.collection(collection)
 
-  const filename = path.resolve(`${__dirname}/../build/${database}/${primary}.json`)
-  let original_records = await readFile(filename)
-  original_records = JSON.parse(original_records)
+  const filename = path.join(local_save_path, database, `${primary}.json`)
 
+  let original_records = await fs.readFile(filename)
+  original_records = JSON.parse(original_records)
 
   let modified = []
   let deleted = []
@@ -64,7 +62,6 @@ export async function lookForChangesInMongo({ primary, database, collection, fla
       __id: original_record.__id,
       modified_fields
     })
-
   }
 
   let recent = await collection.find({ __id: { $exists: false } }).toArray()
@@ -81,8 +78,12 @@ export async function lookForChangesInMongo({ primary, database, collection, fla
   console.log(`---> ${recent.length} recent found`)
 
   const json_string = JSON.stringify({ modified, deleted, recent }, null, 4)
-  const json_filename = path.resolve(`${__dirname}/../build/${database}/${primary}_diff.json`)
-  await writeFile(json_filename, json_string, `utf-8`)
+  const json_filename = path.join(
+    local_save_path,
+    database,
+    `${primary}_diff.json`
+  )
+  await fs.writeFile(json_filename, json_string, `utf-8`)
 
   await connection.close()
 }

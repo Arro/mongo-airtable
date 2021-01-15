@@ -5,11 +5,13 @@
   "author": "Phil Deschaine",
   "license": "MIT",
   "dependencies": {
+    "@babel/node": "^7.12.10",
     "airtable": "^0.10.1",
     "airtable-json": "^1.3.0",
     "core-js": "^3.8.1",
     "deep-equal": "^2.0.5",
     "dotenv": "^8.2.0",
+    "fs-extra": "^9.0.1",
     "moment": "^2.29.1",
     "mongodb": "^3.6.3",
     "yaml": "^1.10.0"
@@ -64,11 +66,8 @@
   "scripts": {
     "test": "npx nyc ava",
     "build": "npx babel src --out-dir dist",
-    "_pull": "node ./build/run/pull.js",
-    "_push": "node ./build/run/push.js",
-    "_update": "node ./build/run/update.js",
-    "pull": "npm-run-all -s transpile _pull",
-    "push": "npm-run-all -s transpile _push",
-    "update": "npm-run-all -s transpile _update"
+    "pull": "babel-node src/run/pull",
+    "push": "babel-node src/run/push",
+    "update": "babel-node src/run/update"
   }
 }

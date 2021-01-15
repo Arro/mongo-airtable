@@ -1,25 +1,37 @@
-import path from 'path'
-import util from 'util'
-import fs from 'fs'
-import yaml from 'yaml'
+import fs from "fs-extra"
+import moment from "moment"
+import path from "path"
 
-import { initialPull } from '../airtable'
-import { initialInsert } from '../mongodb'
-import dotenv from 'dotenv'
+import pullTable from "../pull-table-from-airtable"
+import insertIntoMongo from "../insert-into-mongo"
+import validateEnv from "../validate-env"
+;(async function () {
+  validateEnv()
 
-dotenv.config()
+  for (const table_to_sync of process.env.yaml_config.sync) {
+    await pullTable({
+      ...table_to_sync,
+      auth_key: process.env.airtable_key
+    })
+  }
 
-const readFile = util.promisify(fs.readFile)
+  const last_pulled_filename = path.join(
+    process.env.local_save_path,
+    `last-pulled.txt`
+  )
 
-const run = async() => {
-  const filename = path.resolve(process.env.PATH_MONGO_AIRTABLE_YAML)
-  let config = await readFile(filename, 'utf-8')
-  config  = yaml.parse(config)
-  console.log(config)
+  const tables = process.env.yaml_config.sync
+  for (const { primary, collection, database } of tables) {
+    await insertIntoMongo({
+      primary,
+      collection,
+      database
+    })
+  }
 
-  await initialPull(config)
-  await initialInsert(config)
-}
-
-run()
-
+  await fs.writeFile(
+    last_pulled_filename,
+    moment().format("ddd MMM D YYYY h:mm A ZZ"),
+    "utf-8"
+  )
+})()
