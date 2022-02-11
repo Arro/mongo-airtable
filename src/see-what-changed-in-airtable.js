@@ -1,18 +1,18 @@
-import fs from 'fs'
-import path from 'path'
-import _ from 'lodash'
-import airtableJson from 'airtable-json'
-import deepEqual from 'deep-equal'
+import fs from "fs-extra"
+import path from "path"
+import airtableJson from "airtable-json"
+import deepEqual from "deep-equal"
 
-const { readFile, writeFile } = fs.promises
-
-export async function seeWhatChangedInAirtable({ auth_key, table, last_pulled }) {
+export default async function ({ auth_key, table, last_pulled }) {
   console.log("\n--> see what changed in airtable")
+
+  const local_save_path = path.resolve(process.env.local_save_path)
+
   const { base_name, primary, view, populate, database } = table
-  
+
   const filter =
     "DATETIME_DIFF(LAST_MODIFIED_TIME(), " +
-    `DATETIME_PARSE('${last_pulled}', 'ddd MMM D YYYY h:mm A ZZ'),`  +
+    `DATETIME_PARSE('${last_pulled}', 'ddd MMM D YYYY h:mm A ZZ'),` +
     "'seconds') > 0"
 
   let airtable_records = await airtableJson({
@@ -23,17 +23,21 @@ export async function seeWhatChangedInAirtable({ auth_key, table, last_pulled })
     populate,
     filter
   })
- 
-  const originals_filename = path.resolve(`${__dirname}/../build/${database}/${primary}.json`)
-  let originals = await readFile(originals_filename, `utf-8`)
-  originals = JSON.parse(originals)
 
+  const originals_filename = path.join(
+    local_save_path,
+    database,
+    `${primary}.json`
+  )
+
+  let originals = await fs.readFile(originals_filename, `utf-8`)
+  originals = JSON.parse(originals)
 
   let recent = []
   let modified = []
 
   for (const airtable_record of airtable_records) {
-    const original_record = _.find(originals, (o) => {
+    const original_record = originals.find((o) => {
       return o.__id === airtable_record.__id
     })
 
@@ -66,7 +70,10 @@ export async function seeWhatChangedInAirtable({ auth_key, table, last_pulled })
   console.log(`---> ${recent.length} recent found`)
 
   const json_string = JSON.stringify({ recent, modified }, null, 2)
-  const json_filename = path.resolve(`${__dirname}/../build/${database}/${primary}_changed_in_airtable.json`)
-  await writeFile(json_filename, json_string, `utf-8`)
-
+  const json_filename = path.join(
+    local_save_path,
+    database,
+    `${primary}_changed_in_airtable.json`
+  )
+  await fs.writeFile(json_filename, json_string, `utf-8`)
 }
